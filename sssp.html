@@ -2,7 +2,9 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Visualizations - Single-Source Shortest Paths</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<title>VisuAlgo - Single-Source Shortest Paths</title>
+<link rel="icon" type="image/png" href="img/favicon.png" />
 
 <!--css-->
 <link rel="stylesheet" href="css/normalize.css">
@@ -18,7 +20,7 @@
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
 <script src="js/actions/sssp_actions.js"></script> <!--not yet implemented-->
-<!--script src="//connect.facebook.net/en_US/all.js"></script-->  <!--I turn off this as this is very slow-->
+<!--script src="//connect.facebook.net/en_US/all.js"></script-->
 
 <!--fonts-->
 <link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
@@ -29,14 +31,14 @@
 <body>
 
 <div id="top-bar">
-  <a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
+  <a id="home" href="index.html">Visu<span class="colour">Algo</span></a>
     <span id="title">
       <a class="selected-viz">Single-Source Shortest Paths</a>
     </span>
-    <a id="fb-login" href="#" target="_blank">Facebook connect</a>
+    <!--a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
     <fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
-    </span>
+    </span-->
     <div id="mode-menu">
       <div id="mode-button">Exploration Mode<img src="img/arrow_white.png" alt="Home"/></div>
         <div id="other-modes">
@@ -50,31 +52,46 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-        <p id="sample" class="execAction">Sample Graphs</p>
-        <p id="bfs" class="execAction">BFS</p>
-        <p id="bellmanford" class="execAction">Bellman Ford's Algo</p>
-        <p id="dijkstra" class="execAction">Dijkstra's Algo</p>
+        <p id="create">Random Graph</p>
+        <p id="sample">Sample Graphs</p>
+        <p id="bfs">BFS</p>
+        <p id="bellmanford">Bellman Ford's Algo</p>
+        <p id="dijkstra">Dijkstra's Algo</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-      	<div id="samples-err" class="err" style="z-index: 2000;"></div>
-        <div id="samples-submenu">
-            <div id="sample1" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_3)><p>CP3 4.3 (unweighted)</p></div><!--
-            --><div id="sample2" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_17)><p>CP3 4.17</p></div><!--
-            --><div id="sample3" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_18)><p>CP3 4.18 (negative weight)</p></div><!--
-            --><div id="sample4" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_19)><p>CP3 4.19 (negative cycle)</p></div>
-        </div>        
-        <div id="bfs-input"><input type="text" id="bfs-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
-        <div id="bfs-go" class="execAction" onclick=bfs()><p>GO</p></div>
-        <div id="bfs-err" class="err"></div>
-        <div id="bellmanford-input"><input type="text" id="bellmanford-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
-        <div id="bellmanford-go" class="execAction" onclick=bellmanford()><p>GO</p></div>
-        <div id="bellmanford-err" class="err"></div>
-        <div id="dijkstra-input"><input type="text" id="dijkstra-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
-        <div id="dijkstra-go1" class="execAction" onclick=dijkstra(1) title="Use the original Dijkstra algorithm"><p>Original</p></div>
-        <div id="dijkstra-go2" class="execAction" onclick=dijkstra(2) title="Use the modified Dijkstra algorithm"><p>Modified</p></div>
-        <div id="dijkstra-err" class="err"></div>
+        <div class="create action-menu-pullout">
+            <div id="randomPositive" class="execAction new-menu-option coloured-menu-option" onclick=createRandom(false)><p>Positive Weights Only</p></div>
+            <div id="randomPositive" class="execAction new-menu-option coloured-menu-option" onclick=createRandom(true)><p>With Negative Weights</p></div>
+            <div id="create-err" class="err"></div>
+        </div>
+        <div class="samples action-menu-pullout">
+            <div id="sample1" class="execAction new-menu-option coloured-menu-option" onclick=sample(SSSP_EXAMPLE_CP3_4_3)><p>CP3 4.3 (unweighted)</p></div>
+            <div id="sample2" class="execAction new-menu-option coloured-menu-option" onclick=sample(SSSP_EXAMPLE_CP3_4_17)><p>CP3 4.17</p></div>
+            <div id="sample3" class="execAction new-menu-option coloured-menu-option" onclick=sample(SSSP_EXAMPLE_CP3_4_18)><p>CP3 4.18 (negative weight)</p></div>
+            <div id="sample4" class="execAction new-menu-option coloured-menu-option" onclick=sample(SSSP_EXAMPLE_CP3_4_19)><p>CP3 4.19 (negative cycle)</p></div>
+            <div id="samples-err" class="err" style="z-index: 2000;"></div>
+        </div>   
+             
+        <div class="bfs action-menu-pullout">
+            <div id="bfs-input" class="new-menu-option"><input type="text" id="bfs-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
+            <div id="bfs-go" class="execAction coloured-menu-option" onclick=bfs()><p>GO</p></div>
+            <div id="bfs-err" class="err"></div>
+        </div>
+        
+        <div class="bellmanford action-menu-pullout">
+            <div id="bellmanford-input" class="new-menu-option"><input type="text" id="bellmanford-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
+            <div id="bellmanford-go" class="execAction coloured-menu-option" onclick=bellmanford()><p>GO</p></div>
+            <div id="bellmanford-err" class="err"></div>
+        </div>
+        
+        <div class="dijkstra action-menu-pullout">
+            <div id="dijkstra-input" class="new-menu-option"><input type="text" id="dijkstra-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
+            <div id="dijkstra-go1" class="execAction coloured-menu-option" onclick=dijkstra(1) title="Use the original Dijkstra algorithm"><p>Original</p></div>
+            <div id="dijkstra-go2" class="execAction coloured-menu-option" onclick=dijkstra(2) title="Use the modified Dijkstra algorithm"><p>Modified</p></div>
+            <div id="dijkstra-err" class="err"></div>
+        </div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -167,12 +184,22 @@
   var gw = ssspWidget.getGraphWidget();
   ssspWidget.examples(SSSP_EXAMPLE_CP3_4_17);
 
+  function createRandom(allowNegative) {
+    if(isPlaying) { stop(); }
+    if (mode=="exploration") {
+      ssspWidget.initRandom(allowNegative);
+      $('#progress-bar').slider( "option", "max", 0);
+      closeCreate();
+      isPlaying = false;
+    }
+  }
+
   function sample(id) {
     if(isPlaying) { stop(); }
     setTimeout( function() {
       if ((mode=="exploration")&&ssspWidget.examples(id)) {
         $('#progress-bar').slider( "option", "max", 0);
-		closeSamples();
+		    closeSamples();
         isPlaying = false;
       }
     }, 500);
@@ -183,7 +210,6 @@
     var sourceS = parseInt($('#bfs-v').val());
     setTimeout( function() {
       if ((mode=="exploration")&&ssspWidget.bfs(sourceS)) {
-        closeBFS();
         $('#current-action').show();
         $('#current-action p').html("BFS(" + sourceS + ")");
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -198,7 +224,6 @@
     var sourceS = parseInt($('#bellmanford-v').val());
     setTimeout( function() {
       if ((mode=="exploration")&&ssspWidget.bellmanford(sourceS)) {
-        closeBellmanFords();
         $('#current-action').show();
         $('#current-action p').html("BellmanFord(" + sourceS + ")");
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -213,7 +238,6 @@
   	var sourceS = parseInt($('#dijkstra-v').val());
     setTimeout( function() {
       if ((mode=="exploration")&&ssspWidget.dijkstra(sourceS,versiontype)) {
-        closeDijkstras();
         $('#current-action').show();
         $('#current-action p').html("Dijkstra(" + sourceS + ")");
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);

@@ -7,149 +7,107 @@ var isSetOpen = false;
 var isCheckOpen = false;
 var isToggleOpen = false;
 var isClearOpen = false;
+var isLSOneOpen = false;
 
 function openSetFlags() {
-	if(!isSetFlagsOpen) {
-		$('#setFlags-input').animate({
-			width: "+="+42
-		}, 120, function() {
-			$('#setFlags-go').animate({
-				width: "+="+34
-			},100);
-		});
+	if(!isSetFlagsOpen){
+		$('.setFlags').fadeIn('fast');
+		isSetFlagsOpen = true;
 	}
-	isSetFlagsOpen = true;
 }
 function closeSetFlags() {
-	if(isSetFlagsOpen) {
+	if(isSetFlagsOpen){
+		$('.setFlags').fadeOut('fast');
 		$('#setFlags-err').html("");
-		$('#setFlags-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#setFlags-input').animate({
-				width: "-="+42
-			},120);
-		});
 		isSetFlagsOpen = false;
 	}
 }
 function openSet() {
 	if(!isSetOpen) {
-		$('#set-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#set-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.set').fadeIn('fast');
+		isSetOpen = true;
 	}
-	isSetOpen = true;
 }
 function closeSet() {
 	if(isSetOpen) {
+		$('.set').fadeOut('fast');
 		$('#set-err').html("");
-		$('#set-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#set-input').animate({
-				width: "-="+32
-			},100);
-		});
 		isSetOpen = false;
 	}
 }
 function openCheck() {
 	if(!isCheckOpen) {
-		$('#check-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#check-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.check').fadeIn('fast');
+		isCheckOpen = true;
 	}
-	isCheckOpen = true;
 }
 function closeCheck() {
 	if(isCheckOpen) {
+		$('.check').fadeOut('fast');
 		$('#check-err').html("");
-		$('#check-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#check-input').animate({
-				width: "-="+32
-			},100);
-		});
 		isCheckOpen = false;
 	}
 }
 function openToggle() {
 	if(!isToggleOpen) {
-		$('#toggle-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#toggle-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.toggle').fadeIn('fast');
+		isToggleOpen = true;
 	}
-	isToggleOpen = true;
 }
 function closeToggle() {
 	if(isToggleOpen) {
+		$('.toggle').fadeOut('fast');
 		$('#toggle-err').html("");
-		$('#toggle-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#toggle-input').animate({
-				width: "-="+32
-			},100);
-		});
 		isToggleOpen = false;
 	}
 }
 function openClear() {
 	if(!isClearOpen) {
-		$('#clear-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#clear-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.clear').fadeIn('fast');
+		isClearOpen = true;
 	}
-	isClearOpen = true;
 }
 function closeClear() {
 	if(isClearOpen) {
+		$('.clear').fadeOut('fast');
 		$('#clear-err').html("");
-		$('#clear-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#clear-input').animate({
-				width: "-="+32
-			},100);
-		});
 		isClearOpen = false;
 	}
 }
+function openLSOne() {
+	if(!isLSOneOpen) {
+		$('.lsone').fadeIn('fast');
+		isLSOneOpen = true;
+	}
+}
+function closeLSOne() {
+	if(isLSOneOpen) {
+		$('.lsone').fadeOut('fast');
+		$('#lsone-err').html("");
+		isLSOneOpen = false;
+	}
+}
+
+//
 function hideEntireActionsPanel() {
 	closeSetFlags();
 	closeSet();
 	closeCheck();
 	closeToggle();
 	closeClear();
+	closeLSOne();
 	hideActionsPanel();
 }
 
 $( document ).ready(function() {
 	
-	//the actions with pullout inputs
+	//action pullouts
 	$('#setFlags').click(function() {
 		closeSet();
 		closeCheck();
 		closeToggle();
 		closeClear();
+		closeLSOne();
 		openSetFlags();
 	});
 	
@@ -158,6 +116,7 @@ $( document ).ready(function() {
 		closeCheck();
 		closeToggle();
 		closeClear();
+		closeLSOne();
 		openSet();
 	});
 	
@@ -166,6 +125,7 @@ $( document ).ready(function() {
 		closeSet();
 		closeToggle();
 		closeClear();
+		closeLSOne();
 		openCheck();
 	});
 	
@@ -174,6 +134,7 @@ $( document ).ready(function() {
 		closeSet();
 		closeCheck();
 		closeClear();
+		closeLSOne();
 		openToggle();
 	});
 	
@@ -182,8 +143,34 @@ $( document ).ready(function() {
 		closeSet();
 		closeCheck();
 		closeToggle();
+		closeLSOne();
 		openClear();
 	});
 	
+	$('#lsone').click(function() {
+		closeSetFlags();
+		closeSet();
+		closeCheck();
+		closeToggle();
+		closeClear();
+		openLSOne();
+	});
+	
 	//tutorial mode
+	$('#bitmask-tutorial-1 .tutorial-next').click(function() {
+		showActionsPanel();
+	});
+	$('#bitmask-tutorial-2 .tutorial-next').click(function() {
+		hideEntireActionsPanel();
+	});
+	$('#bitmask-tutorial-3 .tutorial-next').click(function() {
+		showStatusPanel();
+	});
+	$('#bitmask-tutorial-4 .tutorial-next').click(function() {
+		hideStatusPanel();
+		showCodetracePanel();
+	});
+	$('#bitmask-tutorial-5 .tutorial-next').click(function() {
+		hideCodetracePanel();
+	});
 });

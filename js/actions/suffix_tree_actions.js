@@ -2,98 +2,71 @@ var actionsWidth = 180;
 var statusCodetraceWidth = 370;
 
 var isBuildOpen = false;
-var isInsertOpen = false;
 var isSearchOpen = false;
+var isLRSOpen = false;
 var isLCSOpen = false;
 
 function openBuild() {
 	if(!isBuildOpen){
-		$('#build-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#build-go').animate({
-				width: "+="+34
-			}, 100);
-		});
+		$('.build').fadeIn('fast');
 		isBuildOpen = true;
 	}
 }
-
 function closeBuild() {
 	if(isBuildOpen){
+		$('.build').fadeOut('fast');
 		$('#build-err').html("");	
-		$('#build-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#build-input').animate({
-				width: "-="+200
-			}, 250 );
-		});
 		isBuildOpen = false;
 	}
 }
-
 function openSearch() {
 	if(!isSearchOpen){
-		$('#search-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#search-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.search').fadeIn('fast');
 		isSearchOpen = true;
 	}
 }
-
 function closeSearch() {
 	if(isSearchOpen){
-		$('#search-err').html("");	
-		$('#search-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#search-input').animate({
-				width: "-="+200
-			}, 250 );
-		});
-		
+		$('.search').fadeOut('fast');
+		$('#search-err').html("");
 		isSearchOpen = false;
 	}
 }
+function openLRS() {
+	if(!isLRSOpen){
+		$('.lrs').fadeIn('fast');
+		isLRSOpen = true;
+	}
 
+}
+function closeLRS() {
+	if(isLRSOpen){
+		$('.lrs').fadeOut('fast');
+		$('#lrs-err').html("");	
+		isLRSOpen = false;
+	}
+}
 function openLCS() {
 	if(!isLCSOpen){
-		$('#lcs-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#lcs-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.lcs').fadeIn('fast');
 		isLCSOpen = true;
 	}
 
 }
-
 function closeLCS() {
 	if(isLCSOpen){
+		$('.lcs').fadeOut('fast');
 		$('#lcs-err').html("");	
-		$('#lcs-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#lcs-input').animate({
-				width: "-="+200
-			}, 250 );
-		});		
 		isLCSOpen = false;
 	}
-
 }
 
+//
 function hideEntireActionsPanel() {
-	closeSearch();
-	closeLCS();
 	closeBuild();
+	closeSearch();
+	closeLRS();
+	closeLCS();
 	hideActionsPanel();
 }
 
@@ -102,12 +75,14 @@ $( document ).ready(function() {
 	//the actions with pullout inputs
 	$('#build').click(function() {
 		closeSearch();
+		closeLRS();
 		closeLCS();
 		openBuild();
 	});	
 
 	$('#search').click(function() {
 		closeBuild();
+		closeLRS();
 		closeLCS();
 		openSearch();
 	});
@@ -115,6 +90,7 @@ $( document ).ready(function() {
 	$("#LCS").click(function() {
 		closeBuild();
 		closeSearch();
+		closeLRS();
 		openLCS();
 	});
 
@@ -122,6 +98,7 @@ $( document ).ready(function() {
 		closeBuild();
 		closeSearch();
 		closeLCS();
+		openLRS();
 	});
 	
 	//tutorial mode

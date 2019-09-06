@@ -1,119 +1,153 @@
 var actionsWidth = 150;
 var statusCodetraceWidth = 370;
 
-var isBuildv1Open = false;
-var isBuildv2Open = false;
-var isInsertOpen = false;
-var isSearch = false;
-var isLCS = false;
-var isGraham = false;
+var isPerimeterOpen = false;
+var isConvexOpen = false;
+var isCutOpen = false;
+var isPointInsideOpen = false;
+var isGrahamOpen = false;
 
-function openBuildv1() {
-	if(!isBuildv1Open){
-		$('#buildv1-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#buildv1-go').animate({
-				width: "+="+34
-			});
-		});
-		isBuildv1Open = true;
+function openPerimeter() {
+	if(!isPerimeterOpen) {
+		$('.perimeter').fadeIn('fast');
+		isPerimeterOpen = true;
+	}
+}
+function closePerimeter() {
+	if(isPerimeterOpen) {
+		$('.perimeter').fadeOut('fast');
+		$('#perimeter-err').html("");
+		isPerimeterOpen = false;
+	}
+}
+function openConvex() {
+	if(!isConvexOpen) {
+		$('.is_convex').fadeIn('fast');
+		isConvexOpen = true;
+	}
+}
+function closeConvex() {
+	if(isConvexOpen) {
+		$('.is_convex').fadeOut('fast');
+		$('#is_convex-err').html("");
+		isConvexOpen = false;
+	}
+}
+function openCut() {
+	if(!isCutOpen) {
+		$('.cut_polygon').fadeIn('fast');
+		isCutOpen = true;
+	}
+}
+function closeCut() {
+	if(isCutOpen) {
+		$('.cut_polygon').fadeOut('fast');
+		$('#cut_polygon-err').html("");
+		isCutOpen = false;
+	}
+}
+function openPointInside() {
+	if(!isPointInsideOpen) {
+		$('.point_inside').fadeIn('fast');
+		isPointInsideOpen = true;
+	}
+}
+function closePointInside() {
+	if(isPointInsideOpen) {
+		$('.point_inside').fadeOut('fast');
+		$('#point_inside-err').html("");
+		isPointInsideOpen = false;
+	}
+}
+function openGraham() {
+	if(!isGrahamOpen) {
+		$('.graham').fadeIn('fast');
+		isGrahamOpen = true;
+	}
+}
+function closeGraham() {
+	if(isGrahamOpen) {
+		$('.graham').fadeOut('fast');
+		$('#graham-err').html("");
+		isGrahamOpen = false;
 	}
 }
 
-function closeBuildv1() {
-	if(isBuildv1Open){
-		$('#buildv1-err').html("");	
-		$('#buildv1-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#buildv1-input').animate({
-				width: "-="+200
-			}, 250 );
-		});
-		isBuildv1Open = false;
-	}
-}
-
-function openGrahamScan() {
-	if(!isGraham){
-		$('#graham-go').animate({
-			width: "+="+35
-		});
-		isGraham = true;
-	}
-}
-
-function closeGrahamScan() {
-	if(isGraham){
-		$('#graham-go').animate({
-			width: "-="+35
-		});		
-		isGraham = false;
-	}
-}
-
-function openLCS() {
-	if(!isLCS){
-		$('#lcs-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#lcs-go').animate({
-				width: "+="+34
-			});
-		});
-		isLCS = true;
-	}
-}
-
-function closeLCS() {
-	if(isLCS){
-		$('#lcs-err').html("");	
-		$('#lcs-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#lcs-input').animate({
-				width: "-="+200
-			}, 250 );
-		});		
-		isLCS = false;
-	}
-
-}
-
-function closeSearch() {
-	if(isSearch){
-		$('#lcs-err').html("");	
-		$('#lcs-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#lcs-input').animate({
-				width: "-="+200
-			}, 250 );
-		});		
-		isSearch = false;
-	}
-
+function hideEntireActionsPanel() {
+	closePerimeter();
+	closeConvex();
+	closeCut();
+	closePointInside();
+	closeGraham();
+	hideActionsPanel();
 }
 
 $( document ).ready(function() {
+
+	$('#clear').click(function() {
+		closePerimeter();
+		closeConvex();
+		closeCut();
+		closePointInside();
+		closeGraham();
+	});	
 	
 	//the actions with pullout inputs
-	$('#buildv1').click(function() {
-		closeGrahamScan();
-		closeLCS();
-		openBuildv1();
+	$('#perimeter').click(function() {
+		openPerimeter();
+		closeConvex();
+		closeCut();
+		closePointInside();
+		closeGraham();
 	});	
 
-	$("#LCS").click(function() {
-		closeBuildv1();
-		closeSearch();
-		openLCS();
+	$("#is_convex").click(function() {
+		closePerimeter();
+		openConvex();
+		closeCut();
+		closePointInside();
+		closeGraham();
 	});
 
-	$("#LRS").click(function() {
-		closeBuildv1();
-		closeSearch();
-		closeLCS();
+	$("#cut_polygon").click(function() {
+		closePerimeter();
+		closeConvex();
+		openCut();
+		closePointInside();
+		closeGraham();
+	});
+
+	$("#point_inside").click(function() {
+		closePerimeter();
+		closeConvex();
+		closeCut();
+		openPointInside();
+		closeGraham();
+	});
+
+	$("#graham").click(function() {
+		closePerimeter();
+		closeConvex();
+		closeCut();
+		closePointInside();
+		openGraham();
+	});
+
+	//tutorial mode
+	$('#geometry-tutorial-1 .tutorial-next').click(function() {
+		showActionsPanel();
+	});
+	$('#geometry-tutorial-2 .tutorial-next').click(function() {
+		hideEntireActionsPanel();
+	});
+	$('#geometry-tutorial-3 .tutorial-next').click(function() {
+		showStatusPanel();
+	});
+	$('#geometry-tutorial-4 .tutorial-next').click(function() {
+		hideStatusPanel();
+		showCodetracePanel();
+	});
+	$('#geometry-tutorial-5 .tutorial-next').click(function() {
+		hideCodetracePanel();
 	});
 })

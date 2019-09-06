@@ -10,15 +10,15 @@ const INTERFACE_BLANK = 8;
 const ALLOW_NO_ANS = 1;
 const DISALLOW_NO_ANS = 0;
 
-function showAnswerInterface(q, mode) {
+function showAnswerInterface(q) {
 	//reset all unclickable
 	$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
 	$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
 	$('#subset').html("").hide(); $('#subset .faux-v').unbind('click').css('cursor','auto');
-	$('.number-input').hide().unbind('change');
+	$('.number-input').hide().unbind('change').attr('readonly',false);
 	$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
 	
-	if(mode == "TRAINING") {
+	if(MODE == "TRAINING") {
 		switch(qnTypeArr[q]) {
 			case INTERFACE_SINGLE_V:
 				$('#vertexText text, #vertex circle').css('cursor','pointer');
@@ -197,17 +197,15 @@ function showAnswerInterface(q, mode) {
 				
 				//limit input to numbers
 				$('.number-input').change(function() {
-					var text = $(this).val();
-					var reg = /^\d+$/;
-					if(!reg.test(text)) { //not numeric value
-						$(this).val("");
-					} else { //mark as answered
-						$('#question-nav .qnno').eq(q-1).addClass('answered');
-						setAns(q, parseInt(text));
-					}
-					if($(this).val()=="") { //unanswered
+					var text = $(this).val().replace(/[^\0-9]/ig, "");
+					$(this).val(text);
+					if(text=="") { //unanswered
 						$('#question-nav .qnno').eq(q-1).removeClass('answered');
 						clearAns(q);
+					} else { //mark as answered
+						$('#question-nav .qnno').eq(q-1).addClass('answered');
+						$('.mcq-option .box').css('background', '#ddd');
+						setAns(q, parseInt(text));
 					}
 				});
 				
@@ -235,10 +233,11 @@ function showAnswerInterface(q, mode) {
 				}
 				$('.mcq-option .box').css('background', '#ddd');
 				showRecordedAns(q);
+				$('.number-input').val("");
 			});
 		}
 		
-	} else if(mode=="ANSWER") {
+	} else if(MODE=="ANSWER") {
 		gw.jumpToIteration(q,1);
 		switch(qnTypeArr[q]) {
 			case INTERFACE_MCQ:
@@ -265,6 +264,7 @@ function showAnswerInterface(q, mode) {
 		}
 		showRecordedAns(q);
 	}
+	positionViz();
 }
 
 function showRecordedAns(q) {
@@ -278,88 +278,70 @@ function showRecordedAns(q) {
 			$('#no-answer .box'). css('background', '#ddd');
 		}
 	}
-	switch(qnTypeArr[q]) {
-		case INTERFACE_SINGLE_V: //single vertex
-			gw.jumpToIteration(qnNo,1);
-			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
-			setTimeout(function(){
-				for(var i=0; i<verticesToHighlight.length; i++) {
-					colourCircle(verticesToHighlight[i]);
-				}
-			}, 50);
-			break;
-			
-		case INTERFACE_SINGLE_E: //single edge
-			gw.jumpToIteration(qnNo,1);
-			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
-			setTimeout(function(){
-				for(var i=0; i<edgesToHighlight.length; i++) {
-					colourEdge(edgesToHighlight[i]);
-				}
-			}, 50);
-			break;
-			
-		case INTERFACE_MULT_V: //multiple vertices
-			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
-			setTimeout(function(){
-				for(var i=0; i<verticesToHighlight.length; i++) {
-					colourCircle(verticesToHighlight[i]);
-				}
-			}, 50);
-			printCurrentSelection(q);
-			break;
-			
-		case INTERFACE_MULT_E: //multiple edges
-			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
-			setTimeout(function(){
-				for(var i=0; i<edgesToHighlight.length; i++) {
-					colourEdge(edgesToHighlight[i]);
-				}
-			}, 50);
-			printCurrentSelection(q);
-			break;
-			
-		case INTERFACE_MCQ: //MCQ
-			var optionVal = parseInt(ans);
-			var optionText = "";
-			for(var i=0; i<qnParamsArr[q].length; i++) {
-				if(qnParamsArr[q][i][1] == optionVal) {
-					optionText = qnParamsArr[q][i][0];
-				}
-			}
-			$('.mcq-option .option').each(function() {
-				if($(this).html()== optionText) {
-					$(this).prev().css('background', surpriseColour);
-				}
-			});
-			break;
-			
-		case INTERFACE_SUBSET_SINGLE:
-			$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
-			var optionVal = parseInt(ans);
-			var optionText = "";
-			for(var i=0; i<qnParamsArr[q].length; i++) {
-				if(qnParamsArr[q][i][1] == optionVal) {
-					optionText = qnParamsArr[q][i][0];
-					break;
-				}
-			}
-			$('#subset .faux-v').each(function() {
-				if($(this).html()== optionText) {
-					$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
-				}
-			});
-			break;
-			
-		case INTERFACE_SUBSET_MULT:
-			$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
-			var fauxVToHighlight = ans.split(",");
-			for(var i=0; i<fauxVToHighlight.length; i++) {
-				var optionVal = fauxVToHighlight[i];
+	if(ans != UNANSWERED) {
+		switch(qnTypeArr[q]) {
+			case INTERFACE_SINGLE_V: //single vertex
+				gw.jumpToIteration(qnNo,1);
+				var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
+				setTimeout(function(){
+					for(var i=0; i<verticesToHighlight.length; i++) {
+						colourCircle(verticesToHighlight[i]);
+					}
+				}, 50);
+				break;
+				
+			case INTERFACE_SINGLE_E: //single edge
+				gw.jumpToIteration(qnNo,1);
+				var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
+				setTimeout(function(){
+					for(var i=0; i<edgesToHighlight.length; i++) {
+						colourEdge(edgesToHighlight[i]);
+					}
+				}, 50);
+				break;
+				
+			case INTERFACE_MULT_V: //multiple vertices
+				var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
+				setTimeout(function(){
+					for(var i=0; i<verticesToHighlight.length; i++) {
+						colourCircle(verticesToHighlight[i]);
+					}
+				}, 50);
+				printCurrentSelection(q);
+				break;
+				
+			case INTERFACE_MULT_E: //multiple edges
+				var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
+				setTimeout(function(){
+					for(var i=0; i<edgesToHighlight.length; i++) {
+						colourEdge(edgesToHighlight[i]);
+					}
+				}, 50);
+				printCurrentSelection(q);
+				break;
+				
+			case INTERFACE_MCQ: //MCQ
+				var optionVal = parseInt(ans);
 				var optionText = "";
-				for(var j=0; j<qnParamsArr[q].length; j++) {
-					if(qnParamsArr[q][j][1] == optionVal) {
-						optionText = qnParamsArr[q][j][0];
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					if(qnParamsArr[q][i][1] == optionVal) {
+						optionText = qnParamsArr[q][i][0];
+					}
+				}
+				$('.mcq-option .option').each(function() {
+					if($(this).html()== optionText) {
+						$(this).prev().css('background', surpriseColour);
+					}
+				});
+				break;
+				
+			case INTERFACE_SUBSET_SINGLE:
+				$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
+				var optionVal = parseInt(ans);
+				var optionText = "";
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					if(qnParamsArr[q][i][1] == optionVal) {
+						optionText = qnParamsArr[q][i][0];
 						break;
 					}
 				}
@@ -368,45 +350,148 @@ function showRecordedAns(q) {
 						$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
 					}
 				});
-			}
-			printCurrentSelection(q);
-			break;
-			
-		case INTERFACE_BLANK:
-			if(ans == UNANSWERED) {
-				$('.number-input').val(ans);
-			} else {
-				$('.number-input').val(parseInt(ans));
-			}
-			break;
-			
-		default: //nothing
+				break;
+				
+			case INTERFACE_SUBSET_MULT:
+				$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
+				var fauxVToHighlight = ans.split(",");
+				for(var i=0; i<fauxVToHighlight.length; i++) {
+					var optionVal = fauxVToHighlight[i];
+					var optionText = "";
+					for(var j=0; j<qnParamsArr[q].length; j++) {
+						if(qnParamsArr[q][j][1] == optionVal) {
+							optionText = qnParamsArr[q][j][0];
+							break;
+						}
+					}
+					$('#subset .faux-v').each(function() {
+						if($(this).html()== optionText) {
+							$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
+						}
+					});
+				}
+				printCurrentSelection(q);
+				break;
+				
+			case INTERFACE_BLANK:
+				if(ans == UNANSWERED) {
+					$('.number-input').val(ans);
+				} else {
+					$('.number-input').val(parseInt(ans));
+				}
+				break;
+				
+			default: //nothing
+		}
+	}
+	if(MODE == "ANSWER") {
+		printCurrentSelection(q);
 	}
 }
 
 function printCurrentSelection(q) {
+	$('#current-selection').html("").hide().css('color','black');
 	var thisList = ansArr[q];
-	if(thisList == UNANSWERED || thisList == NO_ANSWER) { //no answer
-		$('#current-selection').html("").hide();
-	} else {
-		switch(qnTypeArr[q]) {
-			case INTERFACE_MULT_V:
-			case INTERFACE_SUBSET_MULT:
-				$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+thisList.join(" , ")+"</strong>").show();
-				break;
-			case INTERFACE_MULT_E:
-				var temp ="";
-				for(var i=0; i<thisList.length; i++) {
-					temp += "( "+thisList[i][0]+" , "+thisList[i][1]+" ) , ";
+	
+	if(MODE == "TRAINING") {
+		if(thisList == UNANSWERED || thisList == NO_ANSWER) { //no answer
+			$('#current-selection').html("").hide();
+		} else {
+			switch(qnTypeArr[q]) {
+				case INTERFACE_MULT_V:
+				case INTERFACE_SUBSET_MULT:
+					$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+thisList.join(" , ")+"</strong>").show();
+					break;
+				case INTERFACE_MULT_E:
+					var temp ="";
+					for(var i=0; i<thisList.length; i++) {
+						temp += "( "+thisList[i][0]+" , "+thisList[i][1]+" ) , ";
+					}
+					$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+temp.slice(0, -3)+"</strong>").show();
+					break;
+				default: //nothing
+			}
+		}
+	} else if(MODE == "ANSWER") {
+		//#current-selection
+		if(thisList == UNANSWERED) {
+			$('#current-selection').html("<strong>You did not answer this question.</strong>").css('color','#df3939').show();
+		} else {
+			if(thisList != NO_ANSWER) {
+				switch(qnTypeArr[q]) {
+					case INTERFACE_SINGLE_V:
+					case INTERFACE_SUBSET_SINGLE:
+						$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+thisList+"</strong>").show();
+						break;
+					case INTERFACE_MULT_V:
+					case INTERFACE_SUBSET_MULT:
+						$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+thisList.join(" , ")+"</strong>").show();
+						break;
+					case INTERFACE_SINGLE_E:
+						var temp = "( "+thisList[0]+" , "+thisList[1]+" )";
+						$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+temp+"</strong>").show();
+						break;
+					case INTERFACE_MULT_E:
+						var temp ="";
+						for(var i=0; i<thisList.length; i++) {
+							temp += "( "+thisList[i][0]+" , "+thisList[i][1]+" ) , ";
+						}
+						$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+temp.slice(0, -3)+"</strong>").show();
+						break;
+					default: //nothing
 				}
-				$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+temp.slice(0, -3)+"</strong>").show();
-				break;
-			default: //nothing
+			}
+		}
+		//#ans-key
+		$('#ans-key').html("").hide();
+		var anskeyList = anskeyArr[q];
+		var isCorrect = checkCorrectness(anskeyArr[q]);
+		if(isCorrect) {
+			$('#ans-key').html("You answered this question correctly! :)").show();
+		} else {
+			if((anskeyList instanceof Array) && anskeyList.length == 0) {
+				$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>No answer</strong>").show();
+				return;
+			}
+			switch(qnTypeArr[q]) {
+				case INTERFACE_SINGLE_V:
+				case INTERFACE_SUBSET_SINGLE:
+					$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>"+anskeyList+"</strong>").show();
+					break;
+				case INTERFACE_MULT_V:
+				case INTERFACE_SUBSET_MULT:
+					$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>"+anskeyList.join(" , ")+"</strong>").show();
+					break;
+				case INTERFACE_SINGLE_E:
+					var temp = "( "+anskeyList[0]+" , "+anskeyList[1]+" )";
+					$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>"+temp+"</strong>").show();
+					break;
+				case INTERFACE_MULT_E:
+					var temp ="";
+					for(var i=0; i<anskeyList.length; i+=2) {
+						temp += "( "+anskeyList[i]+" , "+anskeyList[i+1]+" ) , ";
+					}
+					$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>"+temp.slice(0, -3)+"</strong>").show();
+					break;
+				case INTERFACE_MCQ:
+					$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>"+qnParamsArr[q][anskeyList][0]+"</strong>").show(); //must edit
+					break;
+				case INTERFACE_BLANK:
+					$('#ans-key').html("The correct answer is: &nbsp;&nbsp;<strong>"+anskeyList+"</strong>").show();
+					break;
+				default: //nothing
+			}
 		}
 	}
+	//positionViz();
 }
 
 //helper functions
+function positionViz() {
+	var topDist = 60 + $('#qn-text').height() + 60;
+	$('svg').css('top', topDist+'px');
+}
+
 function getVClass(qraphJSON, vList) { //returns array
 	var toReturn = new Array();
 	for(var i=0; i<vList.length; i++){ //for each number in the vertex list
@@ -459,4 +544,8 @@ function containsEdge(el, e) { //checks if e is inside el
 		if(currEdge[0]==e[0]&&currEdge[1]==e[1]) return true;
 	}
 	return false;
+}
+
+function checkCorrectness(actualans) {
+	return (actualans == CORRECT);
 }

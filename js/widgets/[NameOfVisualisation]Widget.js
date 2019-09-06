@@ -1,3 +1,6 @@
+
+//TEMPLATE widget file - we use the heap widget as the working placeholder widget
+
 // @author Steven Halim, copy paste from Ivan Reinaldo's base file
 // Defines a Heap object; keeps implementation of Heap internally and interact with GraphWidget to display Heap visualizations
 
@@ -112,13 +115,13 @@ var Heap = function() {
 
   this.insert = function(vertexText, startAnimationDirectly) {
     if (A.length > 31) {
-      $('#insert-err').html('Sorry, max limit of 31 has been reached');
+      $('#action3-err').html('Action 3 error message');
       return false;
     }
     
 	for(i = 0; i < A.length; i++){
       if(A[i].getFirst() == parseInt(vertexText)){
-        $('#insert-err').html('Sorry, that value is already inside the heap, this visualization can only handle unique elements');
+        $('#action3-err').html('Action 3 error message');
         return false;
       }
     }
@@ -247,7 +250,7 @@ var Heap = function() {
 
   this.extractMax = function(startAnimationDirectly) {
     if (A.length == 2) {
-      $('#extractmax-err').html('Sorry, the Max Heap contains only one item. This is the maximum element. We cannot delete any more items.');
+      $('#action4-err').html('Action 4 error message');
       return false;
     }
 
@@ -330,7 +333,7 @@ var Heap = function() {
 
   this.heapSort = function() {
     if (A.length == 2) {
-      $('#heapsort-err').html('Sorry, the Max Heap contains only one item. This is the maximum element. We cannot delete any more items.');
+      $('#action5-err').html('Action 5 error message');
       return false;
     }
 
@@ -356,7 +359,7 @@ var Heap = function() {
 
   this.buildV1 = function(arr) {
     if (arr.length > 31) {
-      $('#buildv1-err').html('Sorry, you cannot build a Max Heap with more than 31 elements in this visualization.');
+      $('#action1-err').html('Action 1 error message');
       return false;
     }
 
@@ -401,7 +404,7 @@ var Heap = function() {
 
   this.buildV2 = function(arr) {
     if (arr.length > 31) {
-      $('#buildv2-err').html('Sorry, you cannot build a Max Heap with more than 31 elements in this visualization.');
+      $('#action2-err').html('Action 2 error message');
       return false;
     }
 

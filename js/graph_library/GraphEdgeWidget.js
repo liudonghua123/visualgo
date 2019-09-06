@@ -44,6 +44,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   var defaultAnimationDuration = 250; // millisecond
 
   var line;
+  var clickableArea;
   var weightText;
   var weightTextPath;
   var weightTextSpan
@@ -130,45 +131,6 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   this.hideWeight = function(){
     attributeList["weight"]["font-size"] = 0;
   }
-
-  // DEPRECATED
-  /*
-  this.defaultEdge = function(){
-    var key;
-
-    for(key in graphEdgeProperties["path"]["default"]){
-      attributeList["path"][key] = graphEdgeProperties["path"]["default"][key];
-    }
-
-    for(key in graphEdgeProperties["weight"]["default"]){
-      attributeList["weight"][key] = graphEdgeProperties["weight"]["default"][key];
-    }
-  }
-
-  this.highlightEdge = function(){
-    var key;
-
-    for(key in graphEdgeProperties["path"]["highlighted"]){
-      attributeList["path"][key] = graphEdgeProperties["path"]["highlighted"][key];
-    }
-
-     for(key in graphEdgeProperties["weight"]["highlighted"]){
-      attributeList["weight"][key] = graphEdgeProperties["weight"]["highlighted"][key];
-    }
-  }
-
-  this.traversedEdge = function(){
-    var key;
-
-    for(key in graphEdgeProperties["path"]["traversed"]){
-      attributeList["path"][key] = graphEdgeProperties["path"]["traversed"][key];
-    }
-
-     for(key in graphEdgeProperties["weight"]["traversed"]){
-      attributeList["weight"][key] = graphEdgeProperties["weight"]["traversed"][key];
-    }
-  }
-  */
 
   this.stateEdge = function(stateName){
     var key;
@@ -462,7 +424,8 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
               .attr("font-family", attributeList["weight"]["font-family"])
               .attr("font-size", attributeList["weight"]["font-size"])
               .attr("font-weight", attributeList["weight"]["font-weight"])
-              .attr("text-anchor", attributeList["weight"]["text-anchor"]);
+              .attr("text-anchor", attributeList["weight"]["text-anchor"])
+              .attr("text-decoration", "underline");
               
     weightTextSpan.transition()
                   .duration(dur)

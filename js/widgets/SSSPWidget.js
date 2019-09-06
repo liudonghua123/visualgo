@@ -463,171 +463,329 @@ var SSSP = function(){
   }
 
   this.examples = function(ssspExampleConstant) {
-    if (internalAdjList != null) {
-      for (key in internalAdjList)
-        delete internalAdjList[key];
+    internalAdjList = $.extend(true, {}, TEMPLATES[ssspExampleConstant][0]);
+    internalEdgeList = $.extend(true, {}, TEMPLATES[ssspExampleConstant][1]);
+    amountVertex = TEMPLATES[ssspExampleConstant][2];
+    amountEdge = TEMPLATES[ssspExampleConstant][3];
+
+    var newState = createState(internalAdjList, internalEdgeList);
+    graphWidget.updateGraph(newState, 500);
+    return true;
+  }
+
+/*version that uses php graph generator, buggy because of graph form and createState()
+  this.initRandom = function(graph) {
+    internalAdjList = graph.internalAdjList;
+    internalEdgeList = graph.internalEdgeList;
+    amountVertex = internalAdjList.length;
+    amountEdge = internalEdgeList.length;
+    var newState = createState(internalAdjList, internalEdgeList);
+    graphWidget.updateGraph(newState, 500);
+  }*/
+
+  //Temporary version
+  this.initRandom = function(allowNegative) {
+    var templateNo = Math.floor(Math.random()*4); //0-3
+    internalAdjList = $.extend(true, {}, TEMPLATES[templateNo][0]);
+    internalEdgeList = $.extend(true, {}, TEMPLATES[templateNo][1]);
+    amountVertex = TEMPLATES[templateNo][2];
+    amountEdge = TEMPLATES[templateNo][3];
+
+    //change edge weights
+    var keys = Object.keys(internalEdgeList);
+    var nVertices = Object.keys(internalAdjList).length/2;
+    var nEdges = keys.length/2;
+    for(var i=0; i<nEdges; i++) {
+      var newWeight;
+      if(allowNegative) {
+        var confirmNeg  = Math.floor(Math.random()*nEdges);
+        if(i == confirmNeg) { //so that confirm is at least 1 edge with negative weight
+          newWeight = Math.floor(Math.random()*20)-20; //-20 to -1
+        } else {
+          newWeight = Math.floor(Math.random()*100)-20; //-20 to 79
+        }
+      } else {
+        newWeight = Math.floor(Math.random()*50); // 0 to 49
+      }
+      internalEdgeList[keys[i]]["weight"] = newWeight;
+      internalEdgeList[keys[i+nEdges]]["weight"] = newWeight; //graph on right
     }
-    if (internalEdgeList != null) {
-      for (key in internalEdgeList)
-        delete internalEdgeList[key];
+
+    //for graphs without bi-directional edges, randomly change edge directions
+    if(templateNo == SSSP_EXAMPLE_CP3_4_17 || templateNo == SSSP_EXAMPLE_CP3_4_18) {
+      for(var i=0; i<nEdges; i++) {
+        var flipEdge = Math.floor(Math.random()*2); //0 or 1
+        if(flipEdge == 1) {
+          //then flip edge
+          var origA = internalEdgeList[keys[i]]["vertexA"];
+          var origB = internalEdgeList[keys[i]]["vertexB"];
+          internalEdgeList[keys[i]]["vertexA"] = origB;
+          internalEdgeList[keys[i]]["vertexB"] = origA;
+          internalEdgeList[keys[i+nEdges]]["vertexA"] = origB+nVertices; //graph on right
+          internalEdgeList[keys[i+nEdges]]["vertexB"] = origA+nVertices; //graph on right
+          //correct vertex adj list also
+          delete internalAdjList[origA][origB];
+          delete internalAdjList[origA+nVertices][origB+nVertices]; //graph on right
+          internalAdjList[origB][origA] = i;
+          internalAdjList[origB+nVertices][origA+nVertices] = i+nEdges; //graph on right
+        }
+      }
     }
 
-    switch (ssspExampleConstant) {
-      case SSSP_EXAMPLE_CP3_4_3:
-        internalAdjList = {
-          0:{
-            "cx": 20,
-            "cy": 20,
-            "text": 0
-          },
-          1:{
-            "cx": 90,
-            "cy": 20,
-            "text": 1
-          },
-          2:{
-            "cx": 160,
-            "cy": 20,
-            "text": 2
-          },
-          3:{
-            "cx": 230,
-            "cy": 20,
-            "text": 3
-          },
+    var newState = createState(internalAdjList, internalEdgeList);
+    graphWidget.updateGraph(newState, 500);
+    return true;
+  }
 
-          4:{
-            "cx": 20,
-            "cy": 90,
-            "text": 4
-          },
-          5:{
-            "cx": 90,
-            "cy": 90,
-            "text": 5
-          },
-          6:{
-            "cx": 160,
-            "cy": 90,
-            "text": 6
-          },
-          7:{
-            "cx": 230,
-            "cy": 90,
-            "text": 7
-          },
+  function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
+    if(vertexHighlighted == null) vertexHighlighted = {};
+    if(edgeHighlighted == null) edgeHighlighted = {};
+    if(vertexTraversed == null) vertexTraversed = {};
+    if(edgeTraversed == null) edgeTraversed = {};
 
-          8:{
-            "cx": 20,
-            "cy": 160,
-            "text": 8
-          },
+    var key;
+    var state = {
+      "vl":{},
+      "el":{}
+    };
 
-          9:{
-            "cx": 20,
-            "cy": 230,
-            "text": 9
-          },
-          10:{
-            "cx": 90,
-            "cy": 230,
-            "text": 10
-          },
-          11:{
-            "cx": 160,
-            "cy": 230,
-            "text": 11
-          },
-          12:{
-            "cx": 230,
-            "cy": 230,
-            "text": 12
-          },
+    for(key in internalAdjListObject){
+      state["vl"][key] = {};
 
-          13:{
-            "cx": 420,
-            "cy": 20,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          14:{
-            "cx": 490,
-            "cy": 20,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          15:{
-            "cx": 560,
-            "cy": 20,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          16:{
-            "cx": 630,
-            "cy": 20,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
+      state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
+      state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
+      state["vl"][key]["text"] = internalAdjListObject[key]["text"];
+      if (internalAdjListObject[key]["state"] == OBJ_HIDDEN)
+        state["vl"][key]["state"] = OBJ_HIDDEN;
+      else
+        state["vl"][key]["state"] = VERTEX_DEFAULT;
+    }
 
-          17:{
-            "cx": 420,
-            "cy": 90,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          18:{
-            "cx": 490,
-            "cy": 90,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          19:{
-            "cx": 560,
-            "cy": 90,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          20:{
-            "cx": 630,
-            "cy": 90,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
+    for(key in internalEdgeListObject){
+      state["el"][key] = {};
 
-          21:{
-            "cx": 420,
-            "cy": 160,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
+      state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
+      state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
+      state["el"][key]["type"] = EDGE_TYPE_DE; // HOW TO MAKE THIS DIRECTED?
+      state["el"][key]["weight"] = internalEdgeListObject[key]["weight"];
+      if (internalEdgeListObject[key]["state"] == OBJ_HIDDEN)
+        state["el"][key]["state"] = OBJ_HIDDEN;
+      else
+        state["el"][key]["state"] = EDGE_DEFAULT;
+      state["el"][key]["displayWeight"] = true;
+      state["el"][key]["animateHighlighted"] = false;
+    }
 
-          22:{
-            "cx": 420,
-            "cy": 230,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          23:{
-            "cx": 490,
-            "cy": 230,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          24:{
-            "cx": 560,
-            "cy": 230,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          },
-          25:{
-            "cx": 630,
-            "cy": 230,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          }
-        };
+    for(key in vertexHighlighted){
+      state["vl"][key]["state"] = VERTEX_HIGHLIGHTED;
+    }
 
-        internalEdgeList = {
+    for(key in edgeHighlighted){
+      state["el"][key]["state"] = EDGE_HIGHLIGHTED;
+    }
+
+    for(key in vertexTraversed){
+      state["vl"][key]["state"] = VERTEX_TRAVERSED;
+    }
+
+    for(key in edgeTraversed){
+      state["el"][key]["state"] = EDGE_TRAVERSED;
+    }
+
+    return state;
+  }
+  
+  function populatePseudocode(act) {
+    switch (act) {
+      case 0: // BFS
+        $('#code1').html('initSSSP');
+        $('#code2').html('while the queue Q is not empty');
+        $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = Q.front()');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
+        $('#code5').html('');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 1: // Bellman Ford's
+        $('#code1').html('initSSSP');
+        $('#code2').html('for i = 1 to |V|-1');
+        $('#code3').html('&nbsp;&nbsp;for each edge(u, v) in E');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
+        $('#code5').html('');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 2: // Original Dijkstra's
+        $('#code1').html('initSSSP');
+        $('#code2').html('while the priority queue PQ is not empty');
+        $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + update PQ');
+        $('#code5').html('');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 3: // Modified Dijkstra's
+        $('#code1').html('initSSSP');
+        $('#code2').html('while the priority queue PQ is not empty');
+        $('#code3').html('&nbsp;&nbsp;if the front pair is invalid, skip');
+        $('#code4').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
+        $('#code5').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + insert new pair to PQ');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+    }
+  }
+}
+
+//SSSP sample graph templates
+var TEMPLATES = new Array();
+TEMPLATES[SSSP_EXAMPLE_CP3_4_3] = [
+  {
+    0:{
+      "cx": 20,
+      "cy": 20,
+      "text": 0
+    },
+    1:{
+      "cx": 90,
+      "cy": 20,
+      "text": 1
+    },
+    2:{
+      "cx": 160,
+      "cy": 20,
+      "text": 2
+    },
+    3:{
+      "cx": 230,
+      "cy": 20,
+      "text": 3
+    },
+    4:{
+      "cx": 20,
+      "cy": 90,
+      "text": 4
+    },
+    5:{
+      "cx": 90,
+      "cy": 90,
+      "text": 5
+    },
+    6:{
+      "cx": 160,
+      "cy": 90,
+      "text": 6
+    },
+    7:{
+      "cx": 230,
+      "cy": 90,
+      "text": 7
+    },
+    8:{
+      "cx": 20,
+      "cy": 160,
+      "text": 8
+    },
+    9:{
+      "cx": 20,
+      "cy": 230,
+      "text": 9
+    },
+    10:{
+      "cx": 90,
+      "cy": 230,
+      "text": 10
+    },
+    11:{
+      "cx": 160,
+      "cy": 230,
+      "text": 11
+    },
+    12:{
+      "cx": 230,
+      "cy": 230,
+      "text": 12
+    },
+    13:{
+      "cx": 420,
+      "cy": 20,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    14:{
+      "cx": 490,
+      "cy": 20,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    15:{
+      "cx": 560,
+      "cy": 20,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    16:{
+      "cx": 630,
+      "cy": 20,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    17:{
+      "cx": 420,
+      "cy": 90,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    18:{
+      "cx": 490,
+      "cy": 90,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    19:{
+      "cx": 560,
+      "cy": 90,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    20:{
+      "cx": 630,
+      "cy": 90,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    21:{
+      "cx": 420,
+      "cy": 160,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    22:{
+      "cx": 420,
+      "cy": 230,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    23:{
+      "cx": 490,
+      "cy": 230,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    },
+    24:{
+      "cx": 560,
+      "cy": 230,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+          },
+    25:{
+      "cx": 630,
+      "cy": 230,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    }
+  },
+  {
           0:{
               "vertexA": 0,
               "vertexB": 1,
@@ -670,7 +828,6 @@ var SSSP = function(){
               "vertexB": 6,
               "weight": 1
           },
-
           8:{
               "vertexA": 3,
               "vertexB": 2,
@@ -681,7 +838,6 @@ var SSSP = function(){
               "vertexB": 7,
               "weight": 1
           },
-
           10:{
               "vertexA": 4,
               "vertexB": 0,
@@ -692,7 +848,6 @@ var SSSP = function(){
               "vertexB": 8,
               "weight": 1
           },
-
           12:{
               "vertexA": 5,
               "vertexB": 1,
@@ -991,98 +1146,95 @@ var SSSP = function(){
               "vertexB": 25,
               "weight": 1,
         "state": OBJ_HIDDEN
-          },
-
-          62:{
-              "vertexA": 25,
-              "vertexB": 20,
-              "weight": 1,
-        "state": OBJ_HIDDEN
-          },
-          63:{
-              "vertexA": 25,
-              "vertexB": 24,
-              "weight": 1,
-        "state": OBJ_HIDDEN
-          }
-
-        };
-        amountVertex = 13;
-        amountEdge = 32;
-        break;
-      case SSSP_EXAMPLE_CP3_4_17:
-        internalAdjList = {
-          0:{
-            "cx": 210,
-            "cy": 190,
-            "text": 0,
-            4:3
-          },
-          1:{
-            "cx": 50,
-            "cy": 50,
-            "text": 1,
-            3:1,
-            4:0
-          },
-          2:{
-            "cx": 170,
-            "cy": 120,
-            "text": 2,
-            0:4,
-            1:2,
-            3:6
-          },
-          3:{
-            "cx": 330,
-            "cy": 50,
-            "text": 3,
-            4:5
-          },
-          4:{
-            "cx": 240,
-            "cy": 280,
-            "text": 4,
-          },
-          5:{
-            "cx": 610,
-            "cy": 190,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN,
-            9:10
-          },
-          6:{
-            "cx": 450,
-            "cy": 50,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN,
-            8:8,
-            9:7
-          },
-          7:{
-            "cx": 570,
-            "cy": 120,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN,
-            5:11,
-            6:9,
-            8:13
-          },
-          8:{
-            "cx": 730,
-            "cy": 50,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN,
-            9:12
-          },
-          9:{
-            "cx": 640,
-            "cy": 280,
-            "text": 'Inf',
-            "state": OBJ_HIDDEN
-          }
-        };
-        internalEdgeList = {
+    },
+    62:{
+      "vertexA": 25,
+      "vertexB": 20,
+      "weight": 1,
+      "state": OBJ_HIDDEN
+    },
+    63:{
+      "vertexA": 25,
+      "vertexB": 24,
+      "weight": 1,
+      "state": OBJ_HIDDEN
+    }
+  },
+  13, 32
+];
+TEMPLATES[SSSP_EXAMPLE_CP3_4_17] = [
+  {
+    0:{
+      "cx": 210,
+      "cy": 190,
+      "text": 0,
+      4:3
+    },
+    1:{
+      "cx": 50,
+      "cy": 50,
+      "text": 1,
+      3:1,
+      4:0
+    },
+    2:{
+      "cx": 170,
+      "cy": 120,
+      "text": 2,
+      0:4,
+      1:2,
+      3:6
+    },
+    3:{
+      "cx": 330,
+      "cy": 50,
+      "text": 3,
+    4:5
+    },
+      4:{
+      "cx": 240,
+      "cy": 280,
+      "text": 4,
+    },
+    5:{
+      "cx": 610,
+      "cy": 190,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN,
+      9:10
+    },
+    6:{
+      "cx": 450,
+      "cy": 50,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN,
+      8:8,
+      9:7
+    },
+    7:{
+      "cx": 570,
+      "cy": 120,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN,
+      5:11,
+      6:9,
+      8:13
+    },
+    8:{
+      "cx": 730,
+      "cy": 50,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN,
+      9:12
+    },
+    9:{
+      "cx": 640,
+      "cy": 280,
+      "text": 'Inf',
+      "state": OBJ_HIDDEN
+    }
+  },
+  {
           0:{
               "vertexA": 1,
               "vertexB": 4,
@@ -1159,13 +1311,12 @@ var SSSP = function(){
               "vertexB": 8,
               "weight": 7,
               "state": OBJ_HIDDEN
-          }
-        };
-        amountVertex = 5;
-        amountEdge = 7;
-        break;
-      case SSSP_EXAMPLE_CP3_4_18:
-        internalAdjList = {
+    }
+  },
+  5,7
+];
+TEMPLATES[SSSP_EXAMPLE_CP3_4_18] = [
+  {
           0:{
             "cx": 50,
             "cy": 125,
@@ -1231,8 +1382,8 @@ var SSSP = function(){
             "text": 'Inf',
             "state": OBJ_HIDDEN
           }
-        };
-        internalEdgeList = {
+        },
+        {
           0:{
               "vertexA": 0,
               "vertexB": 1,
@@ -1288,12 +1439,11 @@ var SSSP = function(){
               "weight": -10,
               "state": OBJ_HIDDEN
           }
-        };
-        amountVertex = 5;
-        amountEdge = 5;
-        break;
-      case SSSP_EXAMPLE_CP3_4_19:
-        internalAdjList = {
+        },
+        5,5
+];
+TEMPLATES[SSSP_EXAMPLE_CP3_4_19] = [
+  {
           0:{
             "cx": 50,
             "cy": 50,
@@ -1359,8 +1509,8 @@ var SSSP = function(){
             "text": 'Inf',
             "state": OBJ_HIDDEN
           }
-        };
-        internalEdgeList = {
+        },
+        {
           0:{
               "vertexA": 0,
               "vertexB": 1,
@@ -1416,113 +1566,6 @@ var SSSP = function(){
               "weight": -99,
               "state": OBJ_HIDDEN
           }
-        };
-        amountVertex = 5;
-        amountEdge = 5;
-        break;
-    }
-
-    var newState = createState(internalAdjList, internalEdgeList);
-    graphWidget.updateGraph(newState, 500);
-    return true;
-  }
-
-  function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
-    if(vertexHighlighted == null) vertexHighlighted = {};
-    if(edgeHighlighted == null) edgeHighlighted = {};
-    if(vertexTraversed == null) vertexTraversed = {};
-    if(edgeTraversed == null) edgeTraversed = {};
-
-    var key;
-    var state = {
-      "vl":{},
-      "el":{}
-    };
-
-    for(key in internalAdjListObject){
-      state["vl"][key] = {};
-
-      state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
-      state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
-      state["vl"][key]["text"] = internalAdjListObject[key]["text"];
-      if (internalAdjListObject[key]["state"] == OBJ_HIDDEN)
-        state["vl"][key]["state"] = OBJ_HIDDEN;
-      else
-        state["vl"][key]["state"] = VERTEX_DEFAULT;
-    }
-
-    for(key in internalEdgeListObject){
-      state["el"][key] = {};
-
-      state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
-      state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
-      state["el"][key]["type"] = EDGE_TYPE_DE; // HOW TO MAKE THIS DIRECTED?
-      state["el"][key]["weight"] = internalEdgeListObject[key]["weight"];
-      if (internalEdgeListObject[key]["state"] == OBJ_HIDDEN)
-        state["el"][key]["state"] = OBJ_HIDDEN;
-      else
-        state["el"][key]["state"] = EDGE_DEFAULT;
-      state["el"][key]["displayWeight"] = true;
-      state["el"][key]["animateHighlighted"] = false;
-    }
-
-    for(key in vertexHighlighted){
-      state["vl"][key]["state"] = VERTEX_HIGHLIGHTED;
-    }
-
-    for(key in edgeHighlighted){
-      state["el"][key]["state"] = EDGE_HIGHLIGHTED;
-    }
-
-    for(key in vertexTraversed){
-      state["vl"][key]["state"] = VERTEX_TRAVERSED;
-    }
-
-    for(key in edgeTraversed){
-      state["el"][key]["state"] = EDGE_TRAVERSED;
-    }
-
-    return state;
-  }
-  
-  function populatePseudocode(act) {
-    switch (act) {
-      case 0: // BFS
-        $('#code1').html('initSSSP');
-        $('#code2').html('while the queue Q is not empty');
-        $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = Q.front()');
-        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
-        $('#code5').html('');
-        $('#code6').html('');
-        $('#code7').html('');
-        break;
-      case 1: // Bellman Ford's
-        $('#code1').html('initSSSP');
-        $('#code2').html('for i = 1 to |V|-1');
-        $('#code3').html('&nbsp;&nbsp;for each edge(u, v) in E');
-        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
-        $('#code5').html('');
-        $('#code6').html('');
-        $('#code7').html('');
-        break;
-      case 2: // Original Dijkstra's
-        $('#code1').html('initSSSP');
-        $('#code2').html('while the priority queue PQ is not empty');
-        $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
-        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + update PQ');
-        $('#code5').html('');
-        $('#code6').html('');
-        $('#code7').html('');
-        break;
-      case 3: // Modified Dijkstra's
-        $('#code1').html('initSSSP');
-        $('#code2').html('while the priority queue PQ is not empty');
-        $('#code3').html('&nbsp;&nbsp;if the front pair is invalid, skip');
-        $('#code4').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
-        $('#code5').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + insert new pair to PQ');
-        $('#code6').html('');
-        $('#code7').html('');
-        break;
-    }
-  }
-}
+        },
+        5,5
+];

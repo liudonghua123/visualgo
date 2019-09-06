@@ -4,94 +4,72 @@ var statusCodetraceWidth = 370;
 var isBuildv1Open = false;
 var isBuildv2Open = false;
 var isInsertOpen = false;
+var isExtractmaxOpen = false;
+var isHeapsortOpen = false;
 
 function openBuildv1() {
 	if(!isBuildv1Open){
-		$('#buildv1-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#buildv1-go').animate({
-				width: "+="+34
-			},100, function() {
-				$('#buildv1-sample').animate({
-				width: "+="+95}, 180);
-			});
-		});
+		$('.buildv1').fadeIn('fast');
 		isBuildv1Open = true;
 	}
 }
 function closeBuildv1() {
 	if(isBuildv1Open){
+		$('.buildv1').fadeOut('fast');
 		$('#buildv1-err').html("");
-		$('#buildv1-sample').animate({
-			width: "-="+95
-		}, 180, function() {
-			$('#buildv1-go').animate({
-				width: "-="+34
-			}, 100, function() {
-				$('#buildv1-input').animate({
-					width: "-="+200
-				}, 250 );
-			});
-		});
 		isBuildv1Open = false;
 	}
 }
 function openBuildv2() {
 	if(!isBuildv2Open){
-		$('#buildv2-input').animate({
-			width: "+="+200
-		}, 250, function() {
-			$('#buildv2-go').animate({
-				width: "+="+34
-			},100, function() {
-				$('#buildv2-sample').animate({
-				width: "+="+95}, 180);
-			});
-		});
+		$('.buildv2').fadeIn('fast');
 		isBuildv2Open = true;
 	}
 }
 function closeBuildv2() {
 	if(isBuildv2Open){
+		$('.buildv2').fadeOut('fast');
 		$('#buildv2-err').html("");
-		$('#buildv2-sample').animate({
-			width: "-="+95
-		}, 180, function() {
-			$('#buildv2-go').animate({
-				width: "-="+34
-			}, 100, function() {
-				$('#buildv2-input').animate({
-					width: "-="+200
-				}, 250 );
-			});
-		});
 		isBuildv2Open = false;
 	}
 }
 function openInsert() {
-	if(!isInsertOpen) {
-		$('#insert-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#insert-go').animate({
-				width: "+="+34
-			},100);
-		});
+	if(!isInsertOpen){
+		$('.insert').fadeIn('fast');
+		isInsertOpen = true;
 	}
-	isInsertOpen = true;
 }
 function closeInsert() {
-	if(true) {
+	if(isInsertOpen){
+		$('.insert').fadeOut('fast');
 		$('#insert-err').html("");
-		$('#insert-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#insert-input').animate({
-				width: "-="+32
-			}, 100);
-		});
 		isInsertOpen = false;
+	}
+}
+function openExtractmax() {
+	if(!isExtractmaxOpen){
+		$('.extractmax').fadeIn('fast');
+		isExtractmaxOpen = true;
+	}
+}
+function closeExtractmax() {
+	if(isExtractmaxOpen){
+		$('.extractmax').fadeOut('fast');
+		$('#extractmax-err').html("");
+		isExtractmaxOpen = false;
+	}
+}
+function openHeapsort() {
+	if(!isHeapsortOpen){
+		$('.heapsort').fadeIn('fast');
+		isHeapsortOpen = true;
+	}
+}
+function closeHeapsort() {
+	if(isHeapsortOpen){
+		$('.heapsort').fadeOut('fast');
+		$('#heapsort-err').html("");
+		isHeapsortOpen = false;
 	}
 }
 
@@ -99,47 +77,50 @@ function hideEntireActionsPanel() {
 	closeBuildv1();
 	closeBuildv2();
 	closeInsert();
+	closeExtractmax();
+	closeHeapsort();
 	hideActionsPanel();
 }
 
 $( document ).ready(function() {
 	
-	//the actions with pullout inputs
+	//action pullouts
 	$('#buildv1').click(function() {
 		closeBuildv2();
 		closeInsert();
-		$('#extractmax-err').html("");
-		$('#heapsort-err').html("");
+		closeExtractmax();
+		closeHeapsort();
 		openBuildv1();
 	});	
 	$('#buildv2').click(function() {
 		closeBuildv1();
 		closeInsert();
-		$('#extractmax-err').html("");
-		$('#heapsort-err').html("");
+		closeExtractmax();
+		closeHeapsort();
 		openBuildv2();
 	});
 	$('#insert').click(function() {
 		closeBuildv1();
 		closeBuildv2();
-		$('#extractmax-err').html("");
-		$('#heapsort-err').html("");
+		closeExtractmax();
+		closeHeapsort();
 		openInsert();
 	});
 	
-	//and the others
 	$('#extractmax').click(function() {
 		closeBuildv1();
 		closeBuildv2();
 		closeInsert();
-		$('#heapsort-err').html("");
+		closeHeapsort();
+		openExtractmax();
 	});
 	
 	$('#heapsort').click(function() {
 		closeBuildv1();
 		closeBuildv2();
 		closeInsert();
-		$('#extractmax-err').html("");
+		closeExtractmax();
+		openHeapsort();
 	});
 		
 	//tutorial mode

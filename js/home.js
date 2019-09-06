@@ -1,4 +1,20 @@
 $( document ).ready(function() {
+	//training and test links
+	$('.right-links').css('background',surpriseColour);
+	$('#test-link').hide();
+	$('#ans-link').hide();
+	$.ajax({
+		url: "php/Test.php",
+		data: {mode: MODE_CHECK_TEST_OPEN}
+	}).done(function(data) {
+		data = JSON.parse(data);
+		if(data.testIsOpen == 1) {
+			$('#test-link').show();
+		}
+		if(data.answerIsOpen == 1) {
+			$('#ans-link').show();
+		}
+	});
 	
 	//thumbnail image animation on hover	
 	$('a.thumbnail').hover(function() {
@@ -8,26 +24,35 @@ $( document ).ready(function() {
 	});
 	
 	//tags
-	var sssp = new Array("sssp", "shortest path", "cs2020", "cs2010", "bellman ford", "dijkstra", "single source shortest path");
-	var sorting = new Array("sorting", "cs2020", "cs1020", "array", "list", "data structure");
-	var bitmask = new Array("bitmask", "bit manipulation", "cs3233", "cs2020", "cs2010", "array", "list", "data structure", "set");
-	var linked = new Array("linked", "list", "stack", "queue", "cs2020", "cs1020", "array", "data structure");
-	var bst = new Array("bst", "binary search tree", "adelson velskii landis", "avl", "table", "cs2020", "cs2010", "recursion", "recursive", "data structure", "set"); 
-	var heap = new Array("heap", "binary heap", "priority queue", "cs2020", "cs2010", "recursion", "recursive", "data structure");
-	var union = new Array("union", "union find disjoint sets", "ufds", "cs3233", "cs2020", "cs2010", "array", "tree", "set");
-	var graphs = new Array("graphs", "tree");
-	var mst = new Array("mst", "tree", "min", "spanning", "cs2020", "cs2010");
+	var sorting = new Array("sorting", "sorting", "cs2020", "cs1020", "array", "list", "data structure");
+	var bitmask = new Array("bitmask", "bitmask", "bit manipulation", "cs3233", "cs2020", "cs2010", "array", "list", "data structure", "set");
+	var linked = new Array("linked", "linked", "list", "stack", "queue", "cs2020", "cs1020", "array", "data structure");
+	var bst = new Array("bst", "bst", "binary search tree", "adelson velskii landis", "avl", "table", "cs2020", "cs2010", "recursion", "recursive", "data structure", "set"); 
+	var heap = new Array("heap", "heap", "binary heap", "priority queue", "cs2020", "cs2010", "recursion", "recursive", "data structure");
+	var union = new Array("union", "union", "union find disjoint sets", "ufds", "cs3233", "cs2020", "cs2010", "array", "tree", "set");
+	var graphs = new Array("graphs", "graphs", "tree", "cs2010", "cs2020");
+	var mst = new Array("mst", "mst", "tree", "graphs", "min", "spanning", "cs2020", "cs2010");
+	var sssp = new Array("sssp", "sssp", "shortest path", "cs2020", "cs2010", "bellman ford", "dijkstra", "single source shortest path", "graphs");
+	var traversal = new Array("traversal", "traversal", "graphs", "bfs", "dfs", "cs2010", "cs2020");
+	var suffixtree = new Array("suffixtree", "suffix tree", "CS3233", "tree", "suffix", "string");
+	var suffixarray = new Array("suffixarray", "suffix array", "CS3233", "array", "suffix", "string");
+	var geometry = new Array("geometry", "geometry", "polygon", "graham scan", "CS3233");
+	var recursion = new Array("recursion", "recursion", "tree", "cs1010", "recursive", "dynamic programming");
+	var segment = new Array("segmenttree", "segment tree", "tree", "CS3233");
+	var bit = new Array("bit", "bit", "binary", "fenwick", "CS3233");
+	var maxflow = new Array("maxflow", "max flow", "edmonds karp", "CS3233");
+	var matching = new Array("matching", "matching", "graphs", "CS3233")
 	
-	var allViz = new Array(sssp, sorting, bitmask, linked, bst, heap, union, graphs, mst);
+	var allViz = new Array(sorting, bitmask, linked, bst, heap, union, graphs, mst, sssp, traversal, suffixtree, suffixarray, geometry, recursion, segment, bit, maxflow, matching);
 	
 	//generate tags
 	function createFilters() {
 		var filterList = new Array();
 		for(var i=0; i<allViz.length; i++) {
 			var thisVizTags = allViz[i];
-			for(var j=0; j<thisVizTags.length; j++) {
+			for(var j=1; j<thisVizTags.length; j++) {
 				//for all filters
-				if(filterList.indexOf(thisVizTags[j]) == -1) {
+				if($.inArray(thisVizTags[j],filterList) == -1) {
 					filterList.push(thisVizTags[j]);
 				}
 				//for individual viz filters

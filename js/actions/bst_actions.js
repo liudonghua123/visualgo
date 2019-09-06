@@ -2,135 +2,183 @@
 var actionsWidth = 150;
 var statusCodetraceWidth = 420;
 
+var isCreateOpen = false;
 var isSearchOpen = false;
 var isInsertOpen = false;
 var isRemoveOpen = false;
+var isSuccOpen = false;
+var isPredOpen = false;
+var isInorderOpen = false;
 
+function openCreate() {
+	if(!isCreateOpen) {
+		$('.create').fadeIn('fast');
+		isCreateOpen = true;
+	}
+}
+function closeCreate() {
+	if(isCreateOpen) {
+		$('.create').fadeOut('fast');
+		$('#create-err').html("");
+		isCreateOpen = false;
+	}
+}
 function openSearch() {
 	if(!isSearchOpen) {
-		$('#find-min').animate({
-			width: "+="+65
-		}, 100, function() {
-			$('#find-max').animate({
-				width: "+="+69
-			}, 100, function() {
-				$('#search-input').animate({
-					width: "+="+32
-				}, 100, function() {
-					$('#search-go').animate({
-						width: "+="+34
-					},100);
-				});
-			});
-		});
+		$('.search').fadeIn('fast');
+		isSearchOpen = true;
 	}
-	isSearchOpen = true;
 }
 function closeSearch() {
-	if(true) {
+	if(isSearchOpen) {
+		$('.search').fadeOut('fast');
 		$('#search-err').html("");
-		$('#search-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#search-input').animate({
-				width: "-="+32
-			}, 100, function() {
-				$('#find-max').animate({
-					width: "-="+69
-				}, 100, function() {
-					$('#find-min').animate({
-						width: "-="+65
-					},100);
-				});
-			});
-		});
 		isSearchOpen = false;
 	}
 }
 function openInsert() {
 	if(!isInsertOpen) {
-		$('#insert-input').animate({
-			width: "+="+132
-		}, 250, function() {
-			$('#insert-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.insert').fadeIn('fast');
+		isInsertOpen = true;
 	}
-	isInsertOpen = true;
 }
 function closeInsert() {
-	if(true) {
+	if(isInsertOpen) {
+		$('.insert').fadeOut('fast');
 		$('#insert-err').html("");
-		$('#insert-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#insert-input').animate({
-				width: "-="+132
-			}, 250);
-		});
 		isInsertOpen = false;
 	}
 }
 function openRemove() {
 	if(!isRemoveOpen) {
-		$('#remove-input').animate({
-			width: "+="+132
-		}, 250, function() {
-			$('#remove-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.remove').fadeIn('fast');
+		isRemoveOpen = true;
 	}
-	isRemoveOpen = true;
 }
 function closeRemove() {
-	if(true) {
+	if(isRemoveOpen) {
+		$('.remove').fadeOut('fast');
 		$('#remove-err').html("");
-		$('#remove-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#remove-input').animate({
-				width: "-="+132
-			}, 250);
-		});
 		isRemoveOpen = false;
 	}
 }
+function openSucc() {
+	if(!isSuccOpen) {
+		$('.successor').fadeIn('fast');
+		isSuccOpen = true;
+	}
+}
+function closeSucc() {
+	if(isSuccOpen) {
+		$('.successor').fadeOut('fast');
+		$('#succ-err').html("");
+		isSuccOpen = false;
+	}
+}
+function openPred() {
+	if(!isPredOpen) {
+		$('.predecessor').fadeIn('fast');
+		isPredOpen = true;
+	}
+}
+function closePred() {
+	if(isPredOpen) {
+		$('.predecessor').fadeOut('fast');
+		$('#pred-err').html("");
+		isPredOpen = false;
+	}
+}
+function openInorder() {
+	if(!isInorderOpen) {
+		$('.inorder').fadeIn('fast');
+		isInorderOpen = true;
+	}
+}
+function closeInorder() {
+	if(isInorderOpen) {
+		$('.inorder').fadeOut('fast');
+		$('#inorder-err').html("");
+		isInorderOpen = false;
+	}
+}
+
+//
 function hideEntireActionsPanel() {
+	closeCreate();
 	closeSearch();
 	closeInsert();
 	closeRemove();
+	closeSucc();
+	closePred();
+	closeInorder();
 	hideActionsPanel();
 }
 
 $( document ).ready(function() {
 	
-	//the actions with pullout inputs
-	$('#search').click(function() {
+	//action pullouts
+	$('#create').click(function() {
+		closeSearch();
 		closeInsert();
 		closeRemove();
+		closeSucc();
+		closePred();
+		closeInorder();
+		openCreate();
+	});
+	$('#search').click(function() {
+		closeCreate();
+		closeInsert();
+		closeRemove();
+		closeSucc();
+		closePred();
+		closeInorder();
 		openSearch();
-		$('#inorder-err').html("");
 	});
 	$('#insert').click(function() {
+		closeCreate();
 		closeSearch();
 		closeRemove();
+		closeSucc();
+		closePred();
+		closeInorder();
 		openInsert();
-		$('#inorder-err').html("");
 	});
 	$('#remove').click(function() {
+		closeCreate();
 		closeSearch();
 		closeInsert();
+		closeSucc();
+		closePred();
+		closeInorder();
 		openRemove();
-		$('#inorder-err').html("");
 	});
-	
-	//and the others
-	$('#inorder').click(function() {
+	$('#successor').click(function() {
+		closeCreate();
 		closeSearch();
 		closeInsert();
 		closeRemove();
+		closePred();
+		closeInorder();
+		openSucc();
+	});
+	$('#predecessor').click(function() {
+		closeCreate();
+		closeSearch();
+		closeInsert();
+		closeRemove();
+		closeSucc();
+		closeInorder();
+		openPred();
+	});
+	$('#inorder').click(function() {
+		closeCreate();
+		closeSearch();
+		closeInsert();
+		closeRemove();
+		closeSucc();
+		closePred();
+		openInorder();
 	});
 	
 	//tutorial mode

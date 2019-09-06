@@ -2,7 +2,9 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Visualizations - Name</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<title>VisuAlgo - Name</title>
+<link rel="icon" type="image/png" href="img/favicon.png" />
 
 <!--css-->
 <link rel="stylesheet" href="css/normalize.css">
@@ -18,7 +20,7 @@
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
 <script src="js/actions/[name_of_visualisation]_actions.js"></script>
-<script src="//connect.facebook.net/en_US/all.js"></script>
+<!-- <script src="//connect.facebook.net/en_US/all.js"></script> -->
 <!-- more scripts are below-->
 
 <!--fonts-->
@@ -30,13 +32,10 @@
 <body>
 
 <div id="top-bar">
-	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
+	<a id="home" href="index.html">Visu<span class="colour">Algo</span></a>
     <span id="title">
-    	<a class="selected-viz">[Name]</a>
-    </span>
-    <a id="fb-login" href="#" target="_blank">Facebook connect</a>
-    <span id="trick">
-		<fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
+    	<a id="title1" class="selected-viz">[Name]</a>
+        <aid="title2">[Other form]</a>
     </span>
     <div id="mode-menu">
     	<div id="mode-button">Exploration Mode<img src="img/arrow_white.png" alt="Home"/></div>
@@ -51,32 +50,42 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-		<p id="buildv1">Build Heap - O(n log n)</p>
-		<p id="buildv2">Build Heap - O(n)</p>
-		<p id="insert">Insert</p>
-		<p id="extractmax" class="execAction" onclick=extractmax()>Extract Max</p>
-		<p id="heapsort" class="execAction" onclick=heapsort()>HeapSort</p>
+		<p id="action1">Action 1</p>
+		<p id="action2">Action 2</p>
+		<p id="action3">Action 3</p>
+		<p id="action4" class="execAction" onclick=action4()>Action 4</p>
+		<p id="action5" class="execAction" onclick=action5()>Action 5</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-    	<div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
-        <div id="buildv1-go" class="execAction" onclick=buildv1()><p>GO</p></div>
-        <div id="buildv1-sample" class="execAction" onclick=buildv1Sample()><p>Sorted sample</p></div>
-        <div id="buildv1-err" class="err"></div>
+    	<div class="action1 action-menu-pullout">
+            <div id="action1-input" class="new-menu-option"><input type="text" id="arrv1"/></div>
+            <div id="action1-go" class="execAction coloured-menu-option" onclick=action1()><p>GO</p></div>
+            <div id="action1-button" class="execAction new-menu-option coloured-menu-option" onclick=action1Sample()><p>Button</p></div>
+            <div id="action1-err" class="err"></div>
+        </div>
         
-        <div id="buildv2-input"><input type="text" id="arrv2" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
-        <div id="buildv2-go" class="execAction" onclick=buildv2()><p>GO</p></div>
-        <div id="buildv2-sample" class="execAction" onclick=buildv2Sample()><p>Sorted sample</p></div>
-        <div id="buildv2-err" class="err"></div>
+        <div class="action2 action-menu-pullout">
+            <div id="action2-input" class="new-menu-option"><input type="text" id="arrv2" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
+            <div id="action2-go" class="execAction coloured-menu-option" onclick=action2()><p>GO</p></div>
+            <div id="action2-sample" class="execAction new-menu-option coloured-menu-option" onclick=action2Sample()><p>Sorted sample</p></div>
+            <div id="action2-err" class="err"></div>
+        </div>
         
-        <div id="insert-input"><input type="text" id="v" autocomplete="off" value=26 /></div>
-        <div id="insert-go" class="execAction" onclick=insert()><p>GO</p></div>
-        <div id="insert-err" class="err"></div>
+        <div class="action3 action-menu-pullout">
+            <div id="action3-input" class="new-menu-option"><input type="text" id="v" autocomplete="off" value=26 /></div>
+            <div id="action3-go" class="execAction coloured-menu-option" onclick=action3()><p>GO</p></div>
+            <div id="action3-err" class="err"></div>
+        </div>
         
-        <div id="extractmax-err" class="err"></div>
+        <div class="action4 action-menu-pullout">
+        	<div id="action4-err" class="err"></div>
+        </div>
         
-        <div id="heapsort-err" class="err"></div>
+        <div class="action5 action-menu-pullout">
+        	<div id="action5-err" class="err"></div>
+        </div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -120,34 +129,34 @@
 <div id="termsofuse" class="overlays"></div>
 
 <!--tutorial dialogs here-->
-<div id="heap-tutorial-1" class="tutorial-dialog">
-	A Binary Max Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
+<div id="sample-tutorial-1" class="tutorial-dialog">
+	Explanation of the data structure/algorithms here!
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
-<div id="heap-tutorial-2" class="tutorial-dialog">
-	All available operations on the Heap will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
+<div id="sample-tutorial-2" class="tutorial-dialog">
+	All available operations on the [data structure] will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
-<div id="heap-tutorial-3" class="tutorial-dialog">
+<div id="sample-tutorial-3" class="tutorial-dialog">
 	View the visualisation here!
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
-<div id="heap-tutorial-4" class="tutorial-dialog">
+<div id="sample-tutorial-4" class="tutorial-dialog">
 	As the action is being carried out, each step will be described in the status panel.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
-<div id="heap-tutorial-5" class="tutorial-dialog">
+<div id="sample-tutorial-5" class="tutorial-dialog">
 	You can also follow the psuedocode highlights to trace the algorithm.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
-<div id="heap-tutorial-6" class="tutorial-dialog">
+<div id="sample-tutorial-6" class="tutorial-dialog">
 	Control the animation with the player controls! Keyboard shortcuts are:<br/>
     <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
     <strong>Left/right arrows:</strong> step backward/step forward<br/>
     <strong>-/+:</strong> decrease/increase speed<br/>
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
-<div id="heap-tutorial-7" class="tutorial-dialog">
+<div id="sample-tutorial-7" class="tutorial-dialog">
 	Return to "Exploration Mode" to start exploring!
 </div>
 
@@ -165,110 +174,113 @@
 	//start by showing actions panel
 	$('#play').hide();
 
+	//this viz specific code
 	var heapWidget = new Heap();
 	var gw = heapWidget.getGraphWidget();
 		
-	function buildv1() {
+	//title changing
+	$('#title1').click(function() {
+		if(isPlaying) {	stop(); }
+		showActionsPanel();
+		hideStatusPanel();
+		hideCodetracePanel();
+		//toggle widget property here
+	});
+	$('#title2').click(function() {
+		if(isPlaying) {	stop(); }
+		showActionsPanel();
+		hideStatusPanel();
+		hideCodetracePanel();
+		//toggle widget property here
+	});
+
+	function action1() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
-			if ((mode=="exploration")&&heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
+			if ((mode=="exploration")&&heapWidget.buildV1([1,2,3,4,5,6,7,8])) {
 				$('#current-action').show();
-				$('#current-action p').html("Build heap - O(n log n): "+ $('#arrv1').val());
+				$('#current-action p').html("[Name of Action 1]");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeBuildv1(); //in heap_actions.js
 				triggerRightPanels();
 				isPlaying = true; //in viz.js
 			}
 		}, 500);
 	}
 	
-	function buildv1Sample() {
+	function action1Sample() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
-			var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
+			var stringArr = "1,2,3,4,5,6,7,8,9,10,11";
 			if ((mode=="exploration")&&heapWidget.buildV1(stringArr.split(","))) {
 				$('#current-action').show();
-				$('#current-action p').html("Build heap - O(n log n): sorted sample 1 - 31");
+				$('#current-action p').html("[Name of Action 1]");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeBuildv1(); //in heap_actions.js
 				triggerRightPanels();
 				isPlaying = true; //in viz.js
 			}
 		}, 500);
 	}
 	
-	function buildv2() {
+	function action2() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
-			if ((mode=="exploration")&&heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
+			if ((mode=="exploration")&&heapWidget.buildV2([1,2,3,4,5,6,7,8])) {
 				$('#current-action').show();
-				$('#current-action p').html("Build heap - O(n): "+ $('#arrv2').val());
+				$('#current-action p').html("[Name of Action 2]");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeBuildv2();
 				triggerRightPanels();
-				isPlaying = true;
+				isPlaying = true; //in viz.js
 			}
 		}, 500);
 	}
 	
-	function buildv2Sample() {
+	function action2Sample() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
-			var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
+			var stringArr = "1,2,3,4,5,6,7,8,9,10,11";
 			if ((mode=="exploration")&&heapWidget.buildV2(stringArr.split(","))) {
 				$('#current-action').show();
-				$('#current-action p').html("Build heap - O(n): sorted sample 1 - 31");
+				$('#current-action p').html("[Name of Action 2]");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeBuildv2(); //in heap_actions.js
 				triggerRightPanels();
 				isPlaying = true; //in viz.js
 			}
 		}, 500);
 	}
 		
-	function insert() {
+	function action3() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
 			if ((mode=="exploration")&&heapWidget.insert(parseInt(document.getElementById("v").value), true)) {
 				$('#current-action').show();
-				$('#current-action p').html("Insert "+ $('#v').val());
+				$('#current-action p').html("Action3 "+ $('#v').val());
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
-				document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
 			}
 		}, 500);
 	}
 	
-	function extractmax() {
+	function action4() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
 			if ((mode=="exploration")&&heapWidget.extractMax(true)) {
 				$('#current-action').show();
-				$('#current-action p').html("Extract max");
+				$('#current-action p').html("[Name of Action 4]");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				$('#extractmax-err').html("");
-				closeBuildv1();
-				closeBuildv2();
-				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
 			}
 		}, 500);
 	}
 	
-	function heapsort() {
+	function action5() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
 			if ((mode=="exploration")&&heapWidget.heapSort()) {
 				$('#current-action').show();
-				$('#current-action p').html("Heapsort");
+				$('#current-action p').html("[Name of Action 5]");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				$('#heapsort-err').html("");
-				closeBuildv1();
-				closeBuildv2();
-				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
 			}

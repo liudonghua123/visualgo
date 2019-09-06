@@ -1,3 +1,14 @@
+var definitionsArr = new Array();
+definitionsArr.push(['sequence','The order matters. Do not forget to include the starting point (if given) as the first selection.']);
+definitionsArr.push(['BST','The topmost vertex is the root']);
+definitionsArr.push(['AVL','The topmost vertex is the root']);
+definitionsArr.push(['heap','The topmost vertex is the root']);
+definitionsArr.push(['leaf','The root is not considered a leaf']);
+definitionsArr.push(['internal vertices','The root is not considered an internal vertex']);
+definitionsArr.push(['height','Height is defined as the number of edges from the root to the deepest leaf']);
+definitionsArr.push(['rank','Rank is defined as the 1-based index in the sorted list of elements of the tree']);
+definitionsArr.push(['O(n) Build Heap','As defined in the VisuAlgo heap visualisation']);
+
 function extractInfo(q, qnJSON) {
 	qnTextArr[q] = extractQnText(qnJSON.qTopic, qnJSON.qType, qnJSON.qParams);
 	qnTypeArr[q] = extractQnType(qnJSON.aType, qnJSON.aAmt);
@@ -7,6 +18,7 @@ function extractInfo(q, qnJSON) {
 }
 
 function extractQnText(topic, type, params) { //returns string
+	toReturn = "";
 	switch(topic) {
 		case QUESTION_TOPIC_BST:
 			switch(type) {
@@ -63,7 +75,20 @@ function extractQnText(topic, type, params) { //returns string
 			}
 		case QUESTION_TOPIC_SSSP:
 			switch(type) {
-				
+				case QUESTION_TYPE_GREATER_LESS:	toReturn = SSSP_GREATER_LESS; break;
+				case QUESTION_TYPE_PATH:			toReturn = SSSP_PATH; break;
+				case QUESTION_TYPE_PATH_WEIGHT:		toReturn = SSSP_PATH_WEIGHT; break;
+			}
+		case QUESTION_TOPIC_GRAPH_DS:
+			switch(type) {
+				case QUESTION_TYPE_DS_SIZE: 		toReturn = GRAPH_DS_DS_SIZE; break;
+				case QUESTION_TYPE_NEIGHBOURS:		toReturn = GRAPH_DS_NEIGHBOURS; break;
+				case QUESTION_TYPE_NONZERO:			toReturn = GRAPH_DS_NONZERO; break;
+			}
+		case QUESTION_TOPIC_GRAPH_TRAVERSAL:
+			switch(type) {
+				case QUESTION_TYPE_TRAVERSAL:		toReturn = GRAPH_TRAVERSAL_TRAVERSAL; break;
+				case QUESTION_TYPE_DISCONNECT:		toReturn = GRAPH_TRAVERSAL_DISCONNECT; break;
 			}
 		default: //nothing
 	}
@@ -74,6 +99,12 @@ function extractQnText(topic, type, params) { //returns string
 			toReturn = toReturn.replace(matches[i], params[p]);
 		}
 	}
+	for(var i=0; i<definitionsArr.length; i++) {
+		var regex = new RegExp(definitionsArr[i][0],"i");
+		var withTooltip = '<u title=\"'+definitionsArr[i][1]+'\">'+definitionsArr[i][0]+'</u>';
+		toReturn = toReturn.replace(regex, withTooltip);
+	}	
+
 	return toReturn;
 }
 

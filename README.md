@@ -1,4 +1,4 @@
-visualgo
+VisuAlgo
 ========
 
 Motivation

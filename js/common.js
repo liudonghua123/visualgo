@@ -1,12 +1,13 @@
 //surprise colour!
 //Referenced to in  home.js and viz.js also
-var colourArray = ["#52bc69", "#ed5a7d", "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27", "#a7d41e"];
+var colourArray = ["#52bc69", "#d65775"/*"#ed5a7d"*/, "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27", "#a7d41e"];
 					//green, pink, blue, red, yellow, indigo, orange, lime
+
 function getColours() {
 	var generatedColours = new Array();
 	while(generatedColours.length < 4) {
 		var n = (Math.floor(Math.random()*colourArray.length));
-		if(generatedColours.indexOf(n) == -1) {
+		if($.inArray(n, generatedColours) == -1) {
 			generatedColours.push(n);
 		}
 	}
@@ -20,7 +21,7 @@ var colourTheFourth = colourArray[generatedColours[3]];
 
 $( document ).ready(function() {
 	
-	$('#about').html('<h4>About the project</h4><img class="close-overlay" src="img/cross_white.png" /><div class="content"><p><strong><span style="line-height: 200%;">Motivation</span></strong><br/>WeNeedAName was conceptualised in 2011 by Dr Steven Halim as a tool to help his students better understand data structures and algorithms, by allowing them to learn the basics on their own and at their own pace. Together with two of his students from the National University of Singapore, a series of visualisations were developed and consolidated, from simple sorting algorithms to complex graph data structures.</p><p>Though specifically designed for the use of NUS students taking various data structure and algorithm classes (CS1020, CS2010, CS2020, and CS3233), as advocators of online learning, we hope that curious minds around the world will find these visualisations useful as well.</p><p><strong><span style="line-height: 200%;">Ongoing developments</span></strong><br/>WeNeedAName is an ongoing project (as is evident from its name!), and more complex visualisations are still being developed. Originally developed using HTML5 Canvas, we are currently redesigning the site to harness the power of Scalable Vector Graphics (SVG) instead. An automated testing system is also in the works.</p><p><strong><span style="line-height: 200%;">Publications</span></strong><br/>This work has been presented briefly at the CLI Workshop at the ACM ICPC World Finals 2012 (Poland, Warsaw) and at the <a href="http://www.mii.lt/olympiads_in_informatics/htm/INFOL099.htm" target="_blank">IOI Conference at IOI 2012</a> (Sirmione-Montichiari, Italy).</p></div>');
+	$('#about').html('<h4>About the project</h4><img class="close-overlay" src="img/cross_white.png" /><div class="content"><p><strong><span style="line-height: 200%;">Motivation</span></strong><br/>VisuAlgo was conceptualised in 2011 by Dr Steven Halim as a tool to help his students better understand data structures and algorithms, by allowing them to learn the basics on their own and at their own pace. Together with two of his students from the National University of Singapore, a series of visualisations were developed and consolidated, from simple sorting algorithms to complex graph data structures.</p><p>Though specifically designed for the use of NUS students taking various data structure and algorithm classes (CS1020, CS2010, CS2020, and CS3233), as advocators of online learning, we hope that curious minds around the world will find these visualisations useful as well.</p><p><strong><span style="line-height: 200%;">Ongoing developments</span></strong><br/>VisuAlgo is an ongoing project, and more complex visualisations are still being developed. Originally developed using HTML5 Canvas, we are currently redesigning the site to harness the power of Scalable Vector Graphics (SVG) instead. An automated testing system is also in the works.</p><p><strong><span style="line-height: 200%;">Publications</span></strong><br/>This work has been presented briefly at the CLI Workshop at the ACM ICPC World Finals 2012 (Poland, Warsaw) and at the <a href="http://www.mii.lt/olympiads_in_informatics/htm/INFOL099.htm" target="_blank">IOI Conference at IOI 2012</a> (Sirmione-Montichiari, Italy).</p></div>');
 	
 	$('#team').html('<h4>The team</h4><img class="close-overlay" src="img/cross_white.png" /><div class="content"><p><strong><span style="line-height: 200%;">Project leader</span></strong><br/><a href="http://www.comp.nus.edu.sg/~stevenha/" target="_blank">Dr Steven Halim</a>, Lecturer, SoC, NUS</p><p><strong><span style="line-height: 200%;">Initial Programmers</span></strong><br/><a href="http://zichun.i-xo.net/" target="_blank">Koh Zi Chun</a><br/><a href="http://roticv.rantx.com/" target="_blank">Victor Loh Bo Huai</a></p><p><strong><span style="line-height: 200%;">Past Final Year Project students</span></strong><br/>Phan Thi Quynh Trang<br/>Peter Phandi<br/>Albert Millardo Tjindradinata<br/><p><strong><span style="line-height: 200%;">Present Final Year Project students</span></strong><br/>Nguyen Hoang Duy<br/><a href="http://www.rosemarietan.com/" target="_blank">Rose Marie Tan Zhao Yun</a><br/>Ivan Reinaldo</p><p><strong><span style="line-height: 200%;">Advisor</span></strong><br/><a href="http://felix-halim.net/" target="_blank">Felix Halim</a></p></div>');
 	
@@ -28,6 +29,12 @@ $( document ).ready(function() {
 	
 	$('.colour').css("color", surpriseColour); //name
 	$('h4').css("background-color", surpriseColour); //about, contact us etc. button background
+
+	//title
+	$('#title a').click(function() {
+		$('#title a').removeClass('selected-viz');
+		$(this).addClass('selected-viz');
+	});
 	
 	//overlays stuff
 	$('#trigger-about').click(function(){
@@ -53,6 +60,7 @@ $( document ).ready(function() {
 	});
 	
 	//facebook login stuff
+	/*
 	$('#fb-login').hide();
 	window.fbAsyncInit = function() {
 		FB.init({
@@ -82,6 +90,6 @@ $( document ).ready(function() {
 				FB.login();
 			}
 		});
-	};
+	};*/
 	
 });

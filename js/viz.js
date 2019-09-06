@@ -79,9 +79,25 @@ function hideCodetracePanel() {
 	}
 }
 function triggerRightPanels() {
-	hideActionsPanel();
+	hideEntireActionsPanel();
 	showStatusPanel();
 	showCodetracePanel();
+}
+
+function extractQnGraph(graph) {
+	var vList = graph.internalAdjList;
+	var eList = graph.internalEdgeList;
+	for(var key in vList) {
+		var temp;
+		var v = vList[key];
+		temp = v.cxPercentage;
+		v.cxPercentage = v.cx;
+		v.cx = (temp/100)*MAIN_SVG_WIDTH;
+		temp = v.cyPercentage;
+		v.cyPercentage = v.cy;
+		v.cy = (temp/100)*MAIN_SVG_HEIGHT;
+	}
+	return graph;
 }
 
 $( document ).ready(function() {
@@ -106,12 +122,14 @@ $( document ).ready(function() {
 	
 	$('#actions').css("background-color", colourTheSecond);
 	$('#actions-hide').css("background-color", colourTheSecond);
-	$('#actions-extras').children().not('input').not('.err').css("background-color", colourTheSecond);
+	$('.action-menu-pullout').css('left', actionsWidth+43+'px');
+	$('.action-menu-pullout').children().css('float','left');
+	$('.coloured-menu-option').css("background-color", colourTheSecond).css('color','white');
 	if(colourTheSecond == '#fec515' || colourTheSecond == '#a7d41e') {
 		$('#actions p').css('color', 'black');
 		$('#actions p').hover(function() { $(this).css('color', 'white');}, function() {$(this).css('color', 'black');});
-		$('.execAction p').css('color', 'black');
-		$('.execAction p').hover(function() { $(this).css('color', 'white');}, function() {$(this).css('color', 'black');});
+		$('.coloured-menu-option').css('color', 'black');
+		$('.coloured-menu-option').hover(function() { $(this).css('color', 'white');}, function() {$(this).css('color', 'black');});
 		$('#actions-hide img').attr('src', 'img/arrow_black_right.png');
 	}
 	
@@ -129,12 +147,6 @@ $( document ).ready(function() {
 		$('#status').css('color', 'black');
 		$('#status-hide img').attr('src', 'img/arrow_black_right.png');
 	}
-
-	//title
-	$('#title a').click(function() {
-		$('#title a').removeClass('selected-viz');
-		$(this).addClass('selected-viz');
-	});
 	
 	//mmode menu
 	$('#mode-button').click(function() {

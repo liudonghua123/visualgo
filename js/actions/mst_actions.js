@@ -1,102 +1,118 @@
 var actionsWidth = 150;
 var statusCodetraceWidth = 430;
 
+var isCreateOpen = false;
 var isSamplesOpen = false;
+var isKruskalsOpen = false;
 var isPrimsOpen = false;
 
+function openCreate() {
+	if(!isCreateOpen) {
+		$('.create').fadeIn('fast');
+		isCreateOpen = true;
+	}
+}
+function closeCreate() {
+	if(isCreateOpen) {
+		$('.create').fadeOut('fast');
+		$('#create-err').html("");
+		isCreateOpen = false;
+	}
+}
 function openSamples() {
 	if(!isSamplesOpen) {
-		$('#samples-submenu').animate({
-			width: "+="+320
-		}, 250);
+		$('.samples').fadeIn('fast');
+		isSamplesOpen = true;
 	}
-	isSamplesOpen = true;
 }
 function closeSamples() {
-	if(true) {
+	if(isSamplesOpen) {
+		$('.samples').fadeOut('fast');
 		$('#samples-err').html("");
-		$('#samples-submenu').animate({
-			width: "-="+320
-		}, 250);
 		isSamplesOpen = false;
 	}
 }
-
+function openKruskals() {
+	if(!isKruskalsOpen) {
+		$('.kruskals').fadeIn('fast');
+		isKruskalsOpen = true;
+	}
+}
+function closeKruskals() {
+	if(isKruskalsOpen) {
+		$('.kruskals').fadeOut('fast');
+		$('#kruskals-err').html("");
+		isKruskalsOpen = false;
+	}
+}
 function openPrims() {
 	if(!isPrimsOpen) {
-		$('#prims-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#prims-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.prims').fadeIn('fast');
+		isPrimsOpen = true;
 	}
-	isPrimsOpen = true;
 }
 function closePrims() {
-	if(true) {
+	if(isPrimsOpen) {
+		$('.prims').fadeOut('fast');
 		$('#prims-err').html("");
-		$('#prims-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#prims-input').animate({
-				width: "-="+32
-			}, 100);
-		});
 		isPrimsOpen = false;
 	}
 }
 
 function hideEntireActionsPanel() {
+	closeCreate();
 	closeSamples();
+	closeKruskals();
 	closePrims();
 	hideActionsPanel();
 }
 
 $( document ).ready(function() {
 	
-	//the actions with pullout inputs
-	$('#samples').click(function() {
+	//action pullouts
+	$('#create').click(function() {
+		closeSamples();
 		closePrims();
-		$('#kruskals-err').html("");
+		closeKruskals();
+		openCreate();
+	});
+
+	$('#samples').click(function() {
+		closeCreate();
+		closePrims();
+		closeKruskals();
 		openSamples();
 	})
 	
 	$('#prims').click(function() {
+		closeCreate();
 		closeSamples();
-		$('#kruskals-err').html("");
+		closeKruskals();
 		openPrims();
 	});
 	
-	//and the others
 	$('#kruskals').click(function() {
+		closeCreate();
 		closeSamples();
 		closePrims();
+		openKruskals();
 	});
-	
-	//overwrite some viz.js stuff here
-  	$('#samples-submenu').css('background-color','#eee');
-	$('#samples-submenu').children().css('background-color', colourTheSecond);
-	if(colourTheSecond == '#fec515' || colourTheSecond == '#a7d41e') {
-		$('#samples-submenu').children().css('color', 'black');
-	}
 		
 	//tutorial mode
-	$('#heap-tutorial-1 .tutorial-next').click(function() {
+	$('#mst-tutorial-1 .tutorial-next').click(function() {
 		showActionsPanel();
 	});
-	$('#heap-tutorial-2 .tutorial-next').click(function() {
+	$('#mst-tutorial-2 .tutorial-next').click(function() {
 		hideEntireActionsPanel();
 	});
-	$('#heap-tutorial-3 .tutorial-next').click(function() {
+	$('#mst-tutorial-3 .tutorial-next').click(function() {
 		showStatusPanel();
 	});
-	$('#heap-tutorial-4 .tutorial-next').click(function() {
+	$('#mst-tutorial-4 .tutorial-next').click(function() {
 		hideStatusPanel();
 		showCodetracePanel();
 	});
-	$('#heap-tutorial-5 .tutorial-next').click(function() {
+	$('#mst-tutorial-5 .tutorial-next').click(function() {
 		hideCodetracePanel();
 	});
 });

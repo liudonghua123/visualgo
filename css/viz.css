@@ -181,9 +181,12 @@ html { overflow-y: auto; } /*override common.css*/
 #current-action {
 	bottom: 320px;
 	right: 60px;
-	width: auto;
+	width: 400px;
 	display: none;
-	background: #eee;
+	background: none;
+	overflow: normal;
+	white-space: normal;
+	text-align: right;
 }
 	#current-action p{ color: black; font-weight: bold; font-size: 20px; }
 	
@@ -201,6 +204,10 @@ html { overflow-y: auto; } /*override common.css*/
 		padding-left: 14px;
 		padding-right: 15px;
 	}
+	.action-menu-pullout { display: none; position: fixed; }
+	.action-menu-pullout input { background: black; color: white; }
+	.new-menu-option { margin-left: 3px; }
+	.err { color: red; margin-left: 6px; }
 	
 #status {
 	bottom: 255px;

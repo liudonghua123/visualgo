@@ -326,7 +326,7 @@ const graphEdgeProperties = {
     "font-size": 16,
     "default":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#333",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -334,7 +334,7 @@ const graphEdgeProperties = {
     },
     "highlighted":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#ff8a27",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -342,7 +342,7 @@ const graphEdgeProperties = {
     },
     "traversed":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#ff8a27",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -350,7 +350,7 @@ const graphEdgeProperties = {
     },
 	"green":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#52bc69",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -358,7 +358,7 @@ const graphEdgeProperties = {
     },
 	"pink":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#ed5a7d",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -366,7 +366,7 @@ const graphEdgeProperties = {
     },
 	"blue":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#2ebbd1",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -374,7 +374,7 @@ const graphEdgeProperties = {
     },
 	"red":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#d9513c",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -382,7 +382,7 @@ const graphEdgeProperties = {
     },
 	"grey":{
       "startOffset": "75%",
-      "dy": -3,
+      "dy": -5,
       "fill": "#cccccc",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",

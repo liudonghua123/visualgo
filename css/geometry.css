@@ -2,87 +2,90 @@
 
 /*all action pullout (input) stuff here*/
 
-#graham-go {
-	position: fixed;
-	bottom: 60px;
-	left: 196px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
-	#graham-go p {
-			padding: 6px 8px 6px;
-		}
+.perimeter { bottom: 173px; }
+	#perimeter-err { padding: 5px 0px; } /* currently unused*/
+
+.is_convex { bottom: 146px; }
+	#is_convex-err { padding: 5px 0px; } /* currently unused*/
+
+.cut_polygon { bottom: 119px; }
+	#cut_polygon-err { padding: 5px 0px; } /* currently unused*/
+
+.point_inside { bottom: 92px; }
+	#point_inside-err { padding: 5px 0px; } /* currently unused*/
+
+.graham { bottom: 60px; }
+	#graham-err { padding: 8px 0px 7px; } /* currently unused*/
 
 /*all tutorial stuff here*/
-#heap-tutorial-1 {
+#geometry-tutorial-1 {
 	top: 60px;
 	left: 60px;
 	width: 250px;
 }
-#heap-tutorial-2 {
-	bottom: 230px;
+#geometry-tutorial-2 {
+	bottom: 260px;
 	left: 60px;
 	width: 220px;
 }
-	#heap-tutorial-2:before {
+	#geometry-tutorial-2:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-3 {
-	top: 300px;
+#geometry-tutorial-3 {
+	top: 450px;
 	left: 50%;
 	width: 200px;
 	margin-left: -110px;
 }
-	#heap-tutorial-3:before {
+	#geometry-tutorial-3:before {
 		bottom: 100%;
 		left: 50%;
 		border-bottom-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-4 {
+#geometry-tutorial-4 {
 	bottom: 335px;
 	right: 150px;
 	width: 200px;
 }
-	#heap-tutorial-4:before {
+	#geometry-tutorial-4:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-5 {
+#geometry-tutorial-5 {
 	bottom: 275px;
 	right: 170px;
 	width: 180px;
 }
-	#heap-tutorial-5:before {
+	#geometry-tutorial-5:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-6 {
+#geometry-tutorial-6 {
 	bottom: 70px;
 	left: 50%;
 	width: 220px;
 	margin-left: -120px;
 }
-	#heap-tutorial-6:before {
+	#geometry-tutorial-6:before {
 		top: 100%;
 		left: 50%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-7 {
+#geometry-tutorial-7 {
 	top: 70px;
 	right: 60px;
 	width: 150px;
 }
-	#heap-tutorial-7:before {
+	#geometry-tutorial-7:before {
 		bottom: 100%;
 		left: 50%;
 		border-bottom-color: black;

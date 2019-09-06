@@ -102,7 +102,7 @@ var MST = function(){
     var enqueuedToString = "";
     
     for(key in internalAdjList[startVertexText]){
-      if(key == "cx" || key == "cy") continue;
+      if(key == "cx" || key == "cy" || key == "cxPercentage" || key == "cyPercentage") continue;
 
       var enqueuedEdgeId = internalAdjList[startVertexText][key];
       var enqueuedEdge;
@@ -869,6 +869,16 @@ var MST = function(){
 
     graphWidget.updateGraph(newState, 500);
 	return true;
+  }
+
+  this.initRandom = function(graph) {
+    internalAdjList = graph.internalAdjList;
+    internalEdgeList = graph.internalEdgeList;
+    amountVertex = internalAdjList.length;
+    amountEdge = internalEdgeList.length;
+    var newState = createState(internalAdjList, internalEdgeList);
+
+    graphWidget.updateGraph(newState, 500);
   }
 
   function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued){

@@ -1,5 +1,5 @@
 var gw = new GraphWidget();
-var sitePrefix = document.URL.replace("/trainingmode.html","")+"/php/Test.php";
+$('svg').css('height','350px');
 
 //The following arrays use 1-based indexing. Index 0 is a dummy value.
 var qnTextArr = new Array(); //of question text for each qn
@@ -9,12 +9,23 @@ var qnParamsArr = new Array(); //empty when no params, array of key-val options 
 var qnNoAnsArr = new Array(); //1 for allow no answer option, 0 otherwise
 var ansArr = new Array(); //answers to be sent to server
 
+var seed;
 var topics = new Array();
-const seed = (Math.floor(Math.random()*1000000000));
-console.log("seed is: "+seed);
-var qnNo; //1-based
 var nQns; //total number of questions
+
+var qnNo; //1-based
 var nAnswered = 0;
+
+function customAlert(msg) {
+	$('#custom-alert p').html(msg);
+	var m = -1*($('#custom-alert').outerHeight()/2);
+	$('#custom-alert').css('margin-top',m+'px');
+	$('#dark-overlay').fadeIn(function(){
+		$('#custom-alert').fadeIn(function() {
+			setTimeout(function(){ $('#custom-alert').fadeOut(function() { $('#dark-overlay').fadeOut();});}, 1000);
+		});
+	});
+}
 
 /*-------START TEST FUNCTIONS-------*/
 function getNumberOfQns() {
@@ -33,6 +44,7 @@ function init() {
 }
 
 function prepareQnNav(n) { //n is the number of questions
+	$('#question-nav').html("");
 	$('#question-nav').append('<a id="prev-qn" style="margin-right: 20px; opacity: 1.0; cursor: pointer;">PREV QN</a>');
 	for(var i=0; i<n; i++) { $('#question-nav').append('<a class="qnno">'+(i+1)+'</a>'); }
 	$('#question-nav').append('<a id="next-qn" style="margin-left: 20px; opacity: 1.0; cursor: pointer;">NEXT QN</a>');
@@ -66,7 +78,7 @@ function showQn(q) { //q is qn no
 	$('#qn-no').html(q+".");
 	$('#qn-text p').html(qnTextArr[q]);
 	gw.jumpToIteration(q,1);
-	showAnswerInterface(q, MODE);
+	showAnswerInterface(q);
 	if(hasBeenAnswered(q)) {
 		showRecordedAns(q);
 	}
@@ -103,6 +115,13 @@ function checkComplete() {
 }
 
 $(document).ready (function() {
+	/*-------BUTTONS CSS-------*/
+	$('input[type=button], input[type=submit]').css('background',surpriseColour);
+	$('input[type=button], input[type=submit]').hover(function() {
+		$(this).css('background','black');
+	}, function() {
+		$(this).css('background',surpriseColour);
+	});
 	
 	/*-------UNDO OR CLEAR INPUT-------*/
 	$('#undo-ans').click(function() {

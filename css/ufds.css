@@ -1,170 +1,119 @@
 @charset "utf-8";
 
-#viz {
-	padding-top: 60px;
-}
+#viz { padding-top: 60px; }
 
-/*all action pullout (input) stuff here*/
-
-#init-input {
-	position: fixed;
-	bottom: 173px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
+/*all action pullout stuff here*/
+.init { bottom: 173px; }
 	#init-input input {
-		background: black;
-		color: white;
+		width: 25px;
 		padding: 8px;
 	}
-	#init-go {
-		position: fixed;
-		bottom: 173px;
-		left: 198px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
-	}
-		#init-go p {
-			padding: 8px 8px 7px;
-		}
+	#init-go p { padding: 8px 8px 7px; }
+	#init-err { padding: 8px 0px 7px; }
 
-#sample-input {
-	position: fixed;
-	bottom: 146px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
+.sample { bottom: 146px; }
 	#sample-input input {
-		background: black;
-		color: white;
+		width: 25px;
 		padding: 6px 8px 5px;
 	}
-	#sample-go {
-		position: fixed;
-		bottom: 146px;
-		left: 198px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
-	}
-		#sample-go p {
-			padding: 5px 8px;
-		}
-
-#find-input {
-	position: fixed;
-	bottom: 119px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
-	#find-input input {
-		background: black;
-		color: white;
-		padding: 6px 8px 5px;
-	}
-	#find-go {
-		position: fixed;
-		bottom: 119px;
-		left: 198px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
-	}
-		#find-go p {
-			padding: 5px 8px;
-		}
+	#sample-go p { padding: 5px 8px; }
+	#sample-err { padding: 5px 0px; }
 	
-#isSameSet-input {
-	position: fixed;
-	bottom: 92px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
+.find { bottom: 119px; }
+	#find-input input {
+		width: 25px;
+		padding: 6px 8px 5px;
+	}
+	#find-go p { padding: 5px 8px; }
+	#find-err { padding: 5px 0px; }
+
+.isSameSet { bottom: 92px; }
 	#isSameSet-input input {
-		background: black;
-		color: white;
 		padding: 6px 8px 5px;
 		width: 16px;
 	}
-	#isSameSet-go {
-		position: fixed;
-		bottom: 92px;
-		left: 231px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
-	}
-		#isSameSet-go p {
-			padding: 5px 8px;
-		}
+	#isSameSet-go p { padding: 5px 8px; }
+	#isSameSet-err { padding: 5px 0px; }
 	
-#union-input {
-	position: fixed;
-	bottom: 60px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
+.union { bottom: 60px; }
 	#union-input input {
-		background: black;
-		color: white;
 		padding: 8px;
 		width: 16px;
 	}
-	#union-go {
-		position: fixed;
-		bottom: 60px;
-		left: 231px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
+	#union-go p { padding: 8px 8px 7px; }
+	#union-err { padding: 8px 0px 7px; }
+
+/*all tutorial stuff here*/
+#ufds-tutorial-1 {
+	top: 60px;
+	left: 60px;
+	width: 250px;
+}
+#ufds-tutorial-2 {
+	bottom: 230px;
+	left: 60px;
+	width: 220px;
+}
+	#ufds-tutorial-2:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
 	}
-		#union-go p {
-			padding: 8px 8px 7px;
-		}
-		
-/*all action pullout (error) stuff here*/
-.err {
-	position: fixed;
-	color: red;
+#ufds-tutorial-3 {
+	top: 300px;
+	left: 50%;
+	width: 200px;
+	margin-left: -110px;
 }
-#init-err {
-	bottom: 173px;
-	left: 242px;
-	padding: 8px 0px 7px;
+	#ufds-tutorial-3:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+#ufds-tutorial-4 {
+	bottom: 335px;
+	right: 150px;
+	width: 200px;
 }
-#sample-err {
-	bottom: 146px;
-	left: 242px;
-	padding: 5px 0px;
+	#ufds-tutorial-4:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#ufds-tutorial-5 {
+	bottom: 275px;
+	right: 170px;
+	width: 180px;
 }
-#find-err {
-	bottom: 119px;
-	left: 242px;
-	padding: 5px 0px;
+	#ufds-tutorial-5:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#ufds-tutorial-6 {
+	bottom: 70px;
+	left: 50%;
+	width: 220px;
+	margin-left: -120px;
 }
-#isSameSet-err {
-	bottom: 92px;
-	left: 276px;
-	padding: 5px 0px;
+	#ufds-tutorial-6:before {
+		top: 100%;
+		left: 50%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#ufds-tutorial-7 {
+	top: 70px;
+	right: 60px;
+	width: 150px;
 }
-#union-err {
-	bottom: 60px;
-	left: 276px;
-	padding: 8px 0px 7px;
-}
+	#ufds-tutorial-7:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}

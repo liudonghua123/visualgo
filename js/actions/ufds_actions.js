@@ -9,130 +9,66 @@ var isUnionOpen = false;
 
 function openInit() {
 	if(!isInitOpen) {
-		$('#init-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#init-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.init').fadeIn('fast');
+		isInitOpen = true;
 	}
-	isInitOpen = true;
 }
 function closeInit() {
 	if(isInitOpen) {
+		$('.init').fadeOut('fast');
 		$('#init-err').html("");
-		$('#init-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#init-input').animate({
-				width: "-="+32
-			}, 100);
-		});
 		isInitOpen = false;
 	}
 }
 function openSample() {
 	if(!isSampleOpen) {
-		$('#sample-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#sample-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.sample').fadeIn('fast');
+		isSampleOpen = true;
 	}
-	isSampleOpen = true;
 }
 function closeSample() {
 	if(isSampleOpen) {
+		$('.sample').fadeOut('fast');
 		$('#sample-err').html("");
-		$('#sample-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#sample-input').animate({
-				width: "-="+32
-			}, 100);
-		});
 		isSampleOpen = false;
 	}
 }
 function openFind() {
 	if(!isFindOpen){
-		$('#find-input').animate({
-			width: "+="+32
-		}, 100, function() {
-			$('#find-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.find').fadeIn('fast');
 		isFindOpen = true;
 	}
 }
 function closeFind() {
 	if(isFindOpen){
+		$('.find').fadeOut('fast');
 		$('#find-err').html("");
-		$('#find-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#find-input').animate({
-				width: "-="+32
-			}, 250 );
-		});
 		isFindOpen = false;
 	}
 }
 function openIsSameSet() {
 	if(!isIsSameSetOpen){
-		$('#isSameSet-input').animate({
-			width: "+="+65
-		}, 210, function() {
-			$('#arrissamesetj').show();
-			$('#isSameSet-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.isSameSet').fadeIn('fast');
 		isIsSameSetOpen = true;
 	}
 }
 function closeIsSameSet() {
 	if(isIsSameSetOpen){
+		$('.isSameSet').fadeOut('fast');
 		$('#isSameSet-err').html("");
-		$('#isSameSet-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#arrissamesetj').hide();
-			$('#isSameSet-input').animate({
-				width: "-="+65
-			}, 250);
-		});
 		isIsSameSetOpen = false;
 	}
 }
 function openUnion() {
 	if(!isUnionOpen){
-		$('#union-input').animate({
-			width: "+="+65
-		}, 210, function() {
-			$('#arrunionj').show();
-			$('#union-go').animate({
-				width: "+="+34
-			},100);
-		});
+		$('.union').fadeIn('fast');
 		isUnionOpen = true;
 	}
 }
 function closeUnion() {
 	if(isUnionOpen){
+		$('.union').fadeOut('fast');
 		$('#union-err').html("");
-		$('#union-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#arrunionj').hide();
-			$('#union-input').animate({
-				width: "-="+65
-			}, 250);
-		});
 		isUnionOpen = false;
 	}
 }
@@ -151,7 +87,7 @@ $( document ).ready(function() {
 	$('#arrunionj').hide();
 	$('#arrissamesetj').hide();
 	
-	//the actions with pullout inputs
+	//action pullouts
 	$('#init').click(function() {
 		closeFind();
 		closeUnion();
@@ -187,7 +123,23 @@ $( document ).ready(function() {
 		closeIsSameSet();
 		openUnion();
 	});
-	
-	//and the others
+
+	//tutorial mode
+	$('#ufds-tutorial-1 .tutorial-next').click(function() {
+		showActionsPanel();
+	});
+	$('#ufds-tutorial-2 .tutorial-next').click(function() {
+		hideEntireActionsPanel();
+	});
+	$('#ufds-tutorial-3 .tutorial-next').click(function() {
+		showStatusPanel();
+	});
+	$('#ufds-tutorial-4 .tutorial-next').click(function() {
+		hideStatusPanel();
+		showCodetracePanel();
+	});
+	$('#ufds-tutorial-5 .tutorial-next').click(function() {
+		hideCodetracePanel();
+	});
 	
 });

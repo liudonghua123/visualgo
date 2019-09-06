@@ -5,7 +5,7 @@
 var BST = function(){
   var self = this;
   var graphWidget = new GraphWidget();
-  var isAVL = true;
+  var isAVL = false;
 
   var valueRange = [1, 100]; // Range of valid values of BST vertexes allowed
   var maxHeightAllowed = 10;
@@ -119,7 +119,68 @@ var BST = function(){
   }
 
   this.generateRandom = function(){
-    
+    var vertexAmt = Math.floor((Math.random()*7 + 5));
+    var initArr = [];
+
+    while(initArr.length < vertexAmt){
+      var random = Math.floor(1+Math.random()*98);
+      if($.inArray(random, initArr) < 0) initArr.push(random);
+    }
+
+    if(isAVL){
+      var initArrAvl = [];
+
+      function recursion(startVal, endVal){
+        var total = startVal + endVal + 1;
+        if(total < 1) return;
+        if(startVal > endVal) return;
+        if(total == 1) initArrAvl.push(initArr[startVal]);
+        else if(total%2 != 0){
+          initArrAvl.push(initArr[parseInt(total/2)]);
+          recursion(startVal, parseInt(total/2)-1);
+          recursion(parseInt(total/2)+1, endVal);
+        }
+        else{
+          initArrAvl.push(initArr[parseInt(total/2)-1]);
+          recursion(startVal, parseInt(total/2)-2);
+          recursion(parseInt(total/2), endVal);
+        }
+      }
+
+      function sortNumber(a, b){
+        return a-b;
+      }
+
+      initArr.sort(sortNumber);
+      recursion(0, initArr.length -1);
+      init(initArrAvl);
+    }
+
+    else{
+      init(initArr);
+    }
+    return true;
+  }
+
+  this.generateSkewed = function(side) {
+    if(isAVL) {
+      $('#create-err').html("AVL trees are not skewed. Select the BST header to use this action.");
+      return false;
+    } else {
+      var vertexAmt = Math.floor((Math.random()*3 + 3));
+      var initArr = new Array();
+      while(initArr.length < vertexAmt){
+        var random = Math.floor(1+Math.random()*98);
+        if($.inArray(random, initArr) < 0) initArr.push(random);
+      }
+      if(side=="left") {
+        initArr.sort( function(a,b){return b-a} );
+      } else if(side=="right") {
+        initArr.sort( function(a,b){return a-b} );
+      }
+      init(initArr);
+      return true;
+    }
   }
 
   this.isAVL = function(bool){
@@ -387,6 +448,202 @@ var BST = function(){
     return true;
   }
 
+  this.findPredecessor = function(vertexText){
+    vertexText = parseInt(vertexText);
+
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var currentVertex = vertexText;
+    var currentState = createState(internalBst);
+    var currentVertexClass;
+    var vertexTextClass;
+    var key;
+    var ans;
+
+    if(vertexText == null || vertexText == undefined || isNaN(vertexText)){
+      $('#pred-err').html("Please fill in a valid value!");
+      return false;
+    }
+
+    if(internalBst[vertexText] == null){
+      $('#pred-err').html("Please fill in a value present inside the BST!");
+      return false;
+    }
+
+    vertexTextClass = internalBst[vertexText]["vertexClassNumber"];
+
+    currentState["status"] = "The current BST";
+    currentState["lineNo"] = 0;
+
+    stateList.push(currentState);
+
+    if(internalBst[vertexText]["leftChild"] != null){
+      var leftChildVertex = internalBst[vertexText]["leftChild"];
+      var leftChildVertexClass = internalBst[leftChildVertex]["vertexClassNumber"];
+
+      edgeTraversed[leftChildVertexClass] = true;
+
+      currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+      currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["el"][leftChildVertexClass]["animateHighlighted"] = true;
+      currentState["status"] = "Vertex has left child, so go left.";
+      currentState["lineNo"] = 1;
+      stateList.push(currentState);
+
+      currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+      currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][leftChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["status"] = "Check whether left child has right child..";
+      currentState["lineNo"] = 1;
+      stateList.push(currentState);
+
+      if(internalBst[leftChildVertex]["rightChild"] != null){
+        currentVertex = leftChildVertex;
+        currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][leftChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "Right child found! Go to the right..";
+        currentState["lineNo"] = 1;
+        stateList.push(currentState);
+
+        while(internalBst[currentVertex]["rightChild"] != null){
+          currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+          currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+          currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+
+          vertexTraversed[currentVertex] = true;
+
+          currentState["status"] = currentVertex + " is not the predecessor vertex as it has a right child."
+          currentState["lineNo"] = 1;
+
+          stateList.push(currentState);
+
+          currentVertex = internalBst[currentVertex]["rightChild"];
+          currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+          currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+          var edgeHighlighted = currentVertexClass;
+          edgeTraversed[edgeHighlighted] = true;
+
+          currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+          currentState["el"][edgeHighlighted]["animateHighlighted"] = true;
+          currentState["el"][edgeHighlighted]["state"] = EDGE_TRAVERSED;
+
+          currentState["status"] = "Go right to check for larger value..."
+          currentState["lineNo"] = 1;
+
+          stateList.push(currentState);
+        }
+
+        ans = currentVertex;
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "Predecessor found!";
+        currentState["lineNo"] = 1;
+        stateList.push(currentState);
+      }
+
+      else{
+        ans = leftChildVertex;
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][leftChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "No right child found, so this vertex is the predecessor.";
+        currentState["lineNo"] = 1;
+        stateList.push(currentState);
+      }
+    }
+
+    else{
+      currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+      edgeTraversed[currentVertexClass] = true;
+
+      currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+      currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["el"][currentVertexClass]["state"] = EDGE_HIGHLIGHTED;
+      currentState["status"] = "No left child found, so check the parent..";
+      currentState["lineNo"] = [2,3];
+      stateList.push(currentState);
+
+      currentVertex = internalBst[currentVertex]["parent"];
+      currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+      while(true){
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+
+        vertexTraversed[currentVertex] = true;
+
+        if(currentVertex > vertexText){
+          currentState["status"] = currentVertex + " is not the predecessor vertex as " + vertexText + " is part of the left sub-tree";
+          currentState["lineNo"] = 4;
+          stateList.push(currentState);
+        }
+
+        else{
+          ans = currentVertex;
+
+          currentState["status"] = "Predecessor found!";
+          currentState["lineNo"] = 7;
+          stateList.push(currentState);
+          break;
+        }
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+        var edgeHighlighted = currentVertexClass;
+        if(currentVertex != internalBst["root"]) edgeTraversed[edgeHighlighted] = true;
+
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        if(currentVertex != internalBst["root"]) currentState["el"][edgeHighlighted]["state"] = EDGE_HIGHLIGHTED;
+
+        currentState["status"] = "Go up to check for smaller value..."
+        currentState["lineNo"] = 5;
+
+        stateList.push(currentState);
+
+        currentVertex = internalBst[currentVertex]["parent"];
+
+        if(currentVertex == null) break;
+
+        currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+      }
+
+      if(currentVertex == null){
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "Parent is null, so " + vertexText + " has no Predecessor.";
+        currentState["lineNo"] = 6;
+        stateList.push(currentState);
+
+        ans = null;
+      }
+    }
+
+    // End state
+    currentState = createState(internalBst);
+    if(ans != null) currentState["status"] = "Find predecessor has ended. The predecessor of " + vertexText + " is " + ans + ".";
+    else currentState["status"] = "Find predecessor has ended. " + vertexText + " has no predecessor.";
+    currentState["lineNo"] = 0;
+    stateList.push(currentState);
+
+    graphWidget.startAnimation(stateList);
+    populatePseudocode(9);
+    return true;
+  }
+
   this.findSuccessor = function(vertexText){
     vertexText = parseInt(vertexText);
 
@@ -401,12 +658,12 @@ var BST = function(){
     var ans;
 
     if(vertexText == null || vertexText == undefined || isNaN(vertexText)){
-      $('#successor-err').html("Please fill in a valid value!");
+      $('#succ-err').html("Please fill in a valid value!");
       return false;
     }
 
     if(internalBst[vertexText] == null){
-      $('#successor-err').html("Please fill in a value present inside the BST!");
+      $('#succ-err').html("Please fill in a value present inside the BST!");
       return false;
     }
 
@@ -427,14 +684,14 @@ var BST = function(){
       currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
       currentState["el"][rightChildVertexClass]["animateHighlighted"] = true;
       currentState["status"] = "Vertex has right child, so go right.";
-      currentState["lineNo"] = 0;
+      currentState["lineNo"] = 1;
       stateList.push(currentState);
 
       currentState = createState(internalBst, vertexTraversed, edgeTraversed);
       currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
       currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
       currentState["status"] = "Check whether right child has left child..";
-      currentState["lineNo"] = 0;
+      currentState["lineNo"] = 1;
       stateList.push(currentState);
 
       if(internalBst[rightChildVertex]["leftChild"] != null){
@@ -445,7 +702,7 @@ var BST = function(){
         currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["status"] = "Left child found! Go to the left..";
-        currentState["lineNo"] = 0;
+        currentState["lineNo"] = 1;
         stateList.push(currentState);
 
         while(internalBst[currentVertex]["leftChild"] != null){
@@ -457,7 +714,7 @@ var BST = function(){
           vertexTraversed[currentVertex] = true;
 
           currentState["status"] = currentVertex + " is not the successor vertex as it has a left child."
-          currentState["lineNo"] = 0;
+          currentState["lineNo"] = 1;
 
           stateList.push(currentState);
 
@@ -474,7 +731,7 @@ var BST = function(){
           currentState["el"][edgeHighlighted]["state"] = EDGE_TRAVERSED;
 
           currentState["status"] = "Go left to check for smaller value..."
-          currentState["lineNo"] = 0;
+          currentState["lineNo"] = 1;
 
           stateList.push(currentState);
         }
@@ -485,7 +742,7 @@ var BST = function(){
         currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["status"] = "Successor found!";
-        currentState["lineNo"] = 0;
+        currentState["lineNo"] = 1;
         stateList.push(currentState);
       }
 
@@ -496,7 +753,7 @@ var BST = function(){
         currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["status"] = "No left child found, so this vertex is the successor.";
-        currentState["lineNo"] = 0;
+        currentState["lineNo"] = 1;
         stateList.push(currentState);
       }
     }
@@ -510,7 +767,7 @@ var BST = function(){
       currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
       currentState["el"][currentVertexClass]["state"] = EDGE_HIGHLIGHTED;
       currentState["status"] = "No right child found, so check the parent..";
-      currentState["lineNo"] = 0;
+      currentState["lineNo"] = [2,3];
       stateList.push(currentState);
 
       currentVertex = internalBst[currentVertex]["parent"];
@@ -526,7 +783,7 @@ var BST = function(){
 
         if(currentVertex < vertexText){
           currentState["status"] = currentVertex + " is not the successor vertex as " + vertexText + " is part of the right sub-tree";
-          currentState["lineNo"] = 0;
+          currentState["lineNo"] = 4;
           stateList.push(currentState);
         }
 
@@ -534,7 +791,7 @@ var BST = function(){
           ans = currentVertex;
 
           currentState["status"] = "Successor found!";
-          currentState["lineNo"] = 0;
+          currentState["lineNo"] = 7;
           stateList.push(currentState);
           break;
         }
@@ -548,7 +805,7 @@ var BST = function(){
         if(currentVertex != internalBst["root"]) currentState["el"][edgeHighlighted]["state"] = EDGE_HIGHLIGHTED;
 
         currentState["status"] = "Go up to check for smaller value..."
-        currentState["lineNo"] = 0;
+        currentState["lineNo"] = 5;
 
         stateList.push(currentState);
 
@@ -563,8 +820,8 @@ var BST = function(){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-        currentState["status"] = currentVertex + " has no parent, so " + vertexText + " has no successor.";
-        currentState["lineNo"] = 0;
+        currentState["status"] = "Parent is null, so " + vertexText + " has no successor.";
+        currentState["lineNo"] = 6;
         stateList.push(currentState);
 
         ans = null;
@@ -579,7 +836,7 @@ var BST = function(){
     stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);
-    populatePseudocode(1);
+    populatePseudocode(8);
     return true;
   }
 
@@ -1863,6 +2120,8 @@ var BST = function(){
   function init(initArr){
     var i;
 
+    clearScreen();
+
     for(i = 0; i < initArr.length; i++){
       var parentVertex = internalBst["root"];
       var newVertex = parseInt(initArr[i]);
@@ -2172,7 +2431,7 @@ var BST = function(){
         document.getElementById('code6').innerHTML = 'else replace v with successor';
         document.getElementById('code7').innerHTML = '';
         break;
-	case 6: // insert with rotations
+    case 6: // insert with rotations
         document.getElementById('code1').innerHTML = 'insert v';
         document.getElementById('code2').innerHTML = 'check balance factor of this and its children';
         document.getElementById('code3').innerHTML = '&nbsp;&nbsp;case1: this.rotateRight';
@@ -2181,7 +2440,7 @@ var BST = function(){
         document.getElementById('code6').innerHTML = '&nbsp;&nbsp;case4: this.right.rotateRight, this.rotateLeft';
         document.getElementById('code7').innerHTML = '&nbsp;&nbsp;this is balanced';
         break;
-	case 7: // remove with rotations
+    case 7: // remove with rotations
         document.getElementById('code1').innerHTML = 'remove v';
         document.getElementById('code2').innerHTML = 'check balance factor of this and its children';
         document.getElementById('code3').innerHTML = '&nbsp;&nbsp;case1: this.rotateRight';
@@ -2190,6 +2449,24 @@ var BST = function(){
         document.getElementById('code6').innerHTML = '&nbsp;&nbsp;case4: this.right.rotateRight, this.rotateLeft';
         document.getElementById('code7').innerHTML = '&nbsp;&nbsp;this is balanced';
         break;
-	}
+    case 8: // successor
+        document.getElementById('code1').innerHTML = 'if this.right != null return findMin(this.right)';
+        document.getElementById('code2').innerHTML = 'else';
+        document.getElementById('code3').innerHTML = '&nbsp;&nbsp;p = this.parent, T = this';
+        document.getElementById('code4').innerHTML = '&nbsp;&nbsp;while(p != null && T == p.right)';
+        document.getElementById('code5').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;T = p, p = T.parent';
+        document.getElementById('code6').innerHTML = '&nbsp;&nbsp;if p is null return -1';
+        document.getElementById('code7').innerHTML = '&nbsp;&nbsp;else return p';
+        break;
+    case 9: // predecessor
+        document.getElementById('code1').innerHTML = 'if this.left != null return findMax(this.left)';
+        document.getElementById('code2').innerHTML = 'else';
+        document.getElementById('code3').innerHTML = '&nbsp;&nbsp;p = this.parent, T = this';
+        document.getElementById('code4').innerHTML = '&nbsp;&nbsp;while(p != null && T == p.left)';
+        document.getElementById('code5').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;T = p, p = T.parent';
+        document.getElementById('code6').innerHTML = '&nbsp;&nbsp;if p is null return -1';
+        document.getElementById('code7').innerHTML = '&nbsp;&nbsp;else return p';
+        break;
+    }
   }
 }
